@@ -6,13 +6,28 @@
 
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [org.clojure/clojurescript "1.7.170"]
+                 [org.clojure/tools.reader "1.0.0-alpha1"]
+                 [org.clojure/core.async "0.2.371"]
+
                  [devcards "0.2.1"]
                  [sablono "0.4.0"]
-                 #_[org.omcljs/om "0.9.0"]
-                 [reagent "0.5.1"]]
+                 [org.omcljs/om "0.9.0"]
+                 [reagent "0.5.1"]
+
+                 [thi.ng/geom "0.0.908"]
+                 [thi.ng/color "1.0.0"]
+                 [thi.ng/strf "0.2.1"]
+
+                 [complex/complex "0.1.8"]
+
+                 ;; for conflict resolution
+                 [clj-time "0.9.0"]
+                 [ring/ring-core "1.4.0"]]
 
   :plugins [[lein-cljsbuild "1.1.1"]
-            [lein-figwheel "0.5.0-1"]]
+            [lein-figwheel "0.5.0-1" :exclusions [org.clojure/clojure
+                                                  ring/ring-core joda-time
+                                                  org.clojure/tools.reader]]]
 
   :clean-targets ^{:protect false} ["resources/public/js/compiled"
                                     "target"]

@@ -1,2 +1,46 @@
 * turtle graphics
 ** introduction
+   a turtle
+   with a position and a heading
+   and some style
+   can move and turn and has colorored pens
+   to stroke and/or fill a path
+
+   commands are sent to the turtle
+   causing it to change its postion and/or heading
+
+** turtle state
+** turtle commands
+   [:move d]
+   [:forward d]
+   [:turn a]
+   [:resize s]
+
+   [:repeat n ...]
+
+   as data, hiccup style
+
+   and as funtions
+
+** svg rendering
+   [:svg]
+   [:path {:d path-string}]
+   [:clip]
+   [:defs]
+
+** turtle programs
+   an initial turtle-state
+   a sequence of turtle commands
+
+   each command alters the turtle's state
+   and draws to the screen
+
+** program execution
+   create named path with id in defs element
+   that draws the turtle shell
+   and can then be transformed according to position and heading
+   to where ever the turtle may be
+   the turtle carries it's shell with it, as you know
+
+** turtle art
+** turtle geometry
