@@ -1,13 +1,26 @@
 * turtle graphics
 ** introduction
-   a turtle
+   an svg turtle in clojure
    with a position and a heading
    and some style
-   can move and turn and has colorored pens
-   to stroke and/or fill a path
+   and a set of commands
+   that can make paths,
+   that can be stoked or filled,
+   and transformed
 
+   turtle-paths
+
+   a turtle and a set of commands
    commands are sent to the turtle
-   causing it to change its postion and/or heading
+   causing it to change its postion, heading, or style
+
+   with each command the program changes state
+   and a new view is rendered
+   using hiccup style markup with reagent and react
+
+   there are commands to move, turn, resize, repeat, recur, path
+   and programs composed of the basic commands, like
+   circle, polygon, star, sierpensky
 
 ** turtle state
 ** turtle commands
