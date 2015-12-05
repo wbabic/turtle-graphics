@@ -1,8 +1,8 @@
 * turtle graphics
 ** introduction
-   an svg turtle in clojure
+   an svg turtle
    with a position and a heading
-   and some style
+   and some style, a stroke and a fill color
    and a set of commands
    that can make paths,
    that can be stoked or filled,

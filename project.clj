@@ -18,7 +18,7 @@
                  [thi.ng/color "1.0.0"]
                  [thi.ng/strf "0.2.1"]
 
-                 [complex/complex "0.1.8"]
+                 [complex/complex "0.1.9"]
 
                  ;; for conflict resolution
                  [clj-time "0.9.0"]

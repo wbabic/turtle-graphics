@@ -1,15 +1,24 @@
 (ns turtle-graphics.core
   (:require
-   #_[om.core :as om :include-macros true]
    [sablono.core :as sab :include-macros true])
   (:require-macros
-   [devcards.core :as dc :refer [defcard deftest]]))
+   [devcards.core :as dc :refer [defcard deftest defcard-doc]]))
 
 (enable-console-print!)
 
-(defcard first-card
-  (sab/html [:div
-             [:h1 "This is your first devcard!"]]))
+(defcard-doc
+  "
+# Turtle Graphics
+
+## command execution environment
+
+a simple turtle embedded into an svg element
+
+with a set of colored pencils
+
+that can stroke a line or fill a circle
+"
+)
 
 (defn main []
   ;; conditionally start the app based on wether the #main-app-area
