@@ -1,7 +1,8 @@
 (ns turtle-graphics.core
   (:require
    [sablono.core :as sab :include-macros true]
-   [turtle-graphics.turtles.square])
+   [turtle-graphics.turtles.square]
+   [turtle-graphics.turtles.square.turtle])
   (:require-macros
    [devcards.core :as dc :refer [defcard deftest defcard-doc]]))
 
