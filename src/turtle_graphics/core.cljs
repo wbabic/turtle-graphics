@@ -1,6 +1,7 @@
 (ns turtle-graphics.core
   (:require
-   [sablono.core :as sab :include-macros true])
+   [sablono.core :as sab :include-macros true]
+   [turtle-graphics.turtles.square])
   (:require-macros
    [devcards.core :as dc :refer [defcard deftest defcard-doc]]))
 
@@ -10,15 +11,14 @@
   "
 # Turtle Graphics
 
-## command execution environment
+## a command execution environment
 
-a simple turtle embedded into an svg element
+using a simple turtle embedded into an svg element
 
 with a set of colored pencils
 
 that can stroke a line or fill a circle
-"
-)
+")
 
 (defn main []
   ;; conditionally start the app based on wether the #main-app-area

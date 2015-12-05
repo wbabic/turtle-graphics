@@ -18,29 +18,39 @@
    and a new view is rendered
    using hiccup style markup with reagent and react
 
-   there are commands to move, turn, resize, repeat, recur, path
-   and programs composed of the basic commands, like
-   circle, polygon, star, sierpensky
+   commands include: move, turn, resize, repeat, recur, path
+   programs composed of the basic commands, like
+   circle, point,  polygon, star, sierpensky
 
 ** turtle state
+   the turtle state consists of a position and a heading
+   as well as stroke and fill colors
 ** turtle commands
    [:move d]
    [:forward d]
    [:turn a]
    [:resize s]
 
-   [:repeat n ...]
+   [:repeat n [...]]
 
    as data, hiccup style
 
    and as funtions
 
 ** svg rendering
-   [:svg]
-   [:path {:d path-string}]
-   [:clip]
-   [:defs]
+   [:svg {:width 200 :height 200}
+     [:defs
+       [:path {:d path-string}]
+       [:clip]]
+     [:circles ...]
+     [:paths ...]]
 
+** svg commands
+   svg path commands as data structures
+   [:M position]
+   [:m vector]
+   [:circle style]
+   [:path {:id path-name} path-data]
 ** turtle programs
    an initial turtle-state
    a sequence of turtle commands
@@ -54,6 +64,67 @@
    and can then be transformed according to position and heading
    to where ever the turtle may be
    the turtle carries it's shell with it, as you know
-
+   and it's own coordinate system
 ** turtle art
+   collected in galleries
+
 ** turtle geometry
+** turtle habitats
+*** svg-turtle
+    this turtle lives in an svg document that can either be a standalone file or
+    be embedded in an html web page rendered using react
+*** canvas-turtle
+    this turtle lives in an html5 canvas
+    both in two-dimensions and three, making use of web-gl
+
+*** processing-turtle
+*** electron-turtle
+** famous turtles
+*** turtle robot
+    on the floor of the mit ui department
+    and then onto the screen as a virtual turtle
+*** mythical turtle
+    the story behind the turtle robot,
+    a work of pure fiction where
+    the turtle charater of our stories meets and inspires
+    Jean Praget and Seymour Papert
+    who then goes on to invent the
+    famous LOGO turtle in mathland
+    helping children to learn programming and mathematics
+    turtle geometry
+*** complex turtle
+    this turtle is not famous, but is the star of this application
+
+    this turtle lives in the complex plane using
+    complex numbers to represent
+    its position and heading
+    and the processing of turtle commands employ
+    additon and multiplication of complex numbers
+
+    geometric interpretations of complex addition and multiplication
+    become tangible
+    as the learner interacts
+    with this complex turtle
+
+    this turtle also has some special powers.
+    above and beyond traditional turtles
+
+    circles are fundamental
+    as are lines
+
+    this turtle can show how a line is like a circle with infinate radius
+*** affine turtle
+    this is the standard turtle,
+    whose natural home is the affine plane
+*** projective turtle
+    central and paralell projections
+    with a pair of turtles
+
+    to explore projective geometry
+    the projective plane
+    and projective space
+
+    using homogeneous coordinates
+
+*** hyperbolic turtle
+    this turtle explores hyperbolic space
