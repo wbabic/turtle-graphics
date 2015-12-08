@@ -21,33 +21,40 @@
   "
 # Square Turtle
 
-a complex svg turtle who lives in an svg element
-with a simple set of commands
+a complex svg turtle who lives in an svg element that can
+
+* make square
+* render svg
+* make integer lattice
+* define square root of 2
+* root 2 flower
 
 ## Turtle state
 the state of the turtle consists of a position and a heading
 
 {:position zero :heading one}
 
+## Turtle style
+the style of the turtle consits of two colors;
+one for the stoke and one for the fill
+
 ## Turtle Commands
 this turtle responds the following set of commands:
 
-* move
-* draw a line,
 * make a point
-* make a circle with a given style
-* turn left or right by 90 degrees
+* make a line
+* turn left or right (by +/- 90 degrees)
+* make a circle
 
 commands are represented by vectors with keywords, in the style of hiccup:
 
-* [:move d] where d is an integer
-* [:penstroke color]
-* [:penfill color]
-* [:forward d]
-* [:circle style]
-* [:point]
+* [:forward d] where d is an integer
 * [:left]
 * [:right]
+* [:penstroke color]
+* [:penfill color]
+* [:circle]
+* [:point]
 
 ## Turtle Programs
 

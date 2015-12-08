@@ -24,7 +24,6 @@
 
 (def initial-turtle (turtle. n/zero n/one))
 
-
-;; thread a sequnce of commands to a turtle
+;; thread a sequence of commands to a turtle
 ;; reduce a program given an initial turtle
 ;; collecting svg paths as you go
