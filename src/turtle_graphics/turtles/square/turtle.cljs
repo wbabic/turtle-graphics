@@ -35,6 +35,7 @@
 (defrecord Point [color])
 (defrecord Resize [s])
 
+;; turtle command processor
 (defprotocol Command
   (process-command [command app]))
 
@@ -204,6 +205,7 @@ coordinates given in user coordinate space
   (flatten
    (list
     (->Point :lt-grey)
+    (->Circle :clear)
     (two-step-circle c1 c2)
     (->Left)
     (two-step-circle c3 c4)
@@ -212,16 +214,16 @@ coordinates given in user coordinate space
 (defn half-dance [c1 c2 c3 c4]
   (flatten
    (list
-    (->Circle :clear)
     (->Resize (/ 2))
+    (->Circle :clear)
     (circle-dance c1 c2 c3 c4)
     (->Resize 2))))
 
 (defn double-dance [c1 c2 c3 c4]
   (flatten
    (list
-    (->Circle :clear)
     (->Resize 2)
+    (->Circle :clear)
     (circle-dance c1 c2 c3 c4)
     (->Resize (/ 2)))))
 
@@ -266,10 +268,5 @@ coordinates given in user coordinate space
   (run-program (half-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
   (run-program (double-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
 
-  (run-program (root2-flower :lt-green :lt-blue :lt-red :lt-purple) 1000)
-
-  (run-program (concat
-                (circle-dance :lt-green :lt-blue :lt-red :lt-purple)
-                (root2-flower :lt-green :lt-blue :lt-red :lt-purple))
-               300)
+  (run-program (root2-flower :lt-green :lt-blue :lt-red :lt-purple) 500)
   )
