@@ -28,10 +28,12 @@
 
 ;; turtle commands
 (defrecord Forward [d])
+(defrecord Move [d])
 (defrecord Left [])
 (defrecord Right [])
 (defrecord Circle [color])
 (defrecord Point [color])
+(defrecord Resize [s])
 
 (defprotocol Command
   (process-command [command app]))
@@ -48,6 +50,17 @@
       (-> app
           (update-in [:turtle :position] #(n/add % (n/mult heading d)))
           (update-in [:svg :path] #(conj % [:L w])))))
+  Move
+  (process-command [{d :d} app]
+    (let [heading (get-in app [:turtle :heading])
+          position (get-in app [:turtle :position])
+          v (n/mult heading d)
+          w (n/add position v)]
+      ;; update turtle
+      ;; update svg path
+      (-> app
+          (update-in [:turtle :position] #(n/add % (n/mult heading d)))
+          (update-in [:svg :path] #(conj % [:M w])))))
   Left
   (process-command [_ app]
     (update-in app [:turtle :heading] #(n/mult % n/i)))
@@ -67,7 +80,10 @@
           h (get-in app [:turtle :heading])
           r (n/length h)
           circle {:stroke :grey :fill color :center p}]
-      (update-in app [:svg :points] #(conj % circle)))))
+      (update-in app [:svg :points] #(conj % circle))))
+  Resize
+  (process-command [{s :s} app]
+    (update-in app [:turtle :heading] #(n/mult % s))))
 
 (comment
   (process-command (->Forward 1) initial-app-state)
@@ -85,10 +101,25 @@
            (str "L " px " " py " "))
          :else nil))
 
+(defn svg-command->text [command]
+  (match command
+         [:M p]
+         (let [[px py] (n/coords p)]
+           (str "M " px " " py " "))
+         [:L p]
+         (let [[px py] (n/coords p)]
+           (str "L " px " " py " "))
+         :else nil))
+
 (defn svg-path-string [svg-commands t-fn]
   (clojure.string/trim
    (clojure.string/join
     (map #(svg-command->string % t-fn) svg-commands))))
+
+(defn svg-path-text [svg-commands]
+  (clojure.string/trim
+   (clojure.string/join
+    (map svg-command->text svg-commands))))
 
 (defn svg-circle [circle t-fn]
   (let [{:keys [stroke fill center radius]} circle
@@ -108,6 +139,14 @@
               :cy cy
               :r 3}]))
 
+(defn text-circle [circle t-fn]
+  (let [{:keys [stroke fill center radius]} circle]
+    [(n/coords center) fill]))
+
+(defn text-point [circle t-fn]
+  (let [{:keys [stroke fill center radius]} circle]
+    (n/coords center)))
+
 (defn render-svg
   "create svg component for svg-commands"
   [app resolution t-fn]
@@ -121,12 +160,6 @@
      (into [:g {:className "circle-group"}] (map #(svg-circle % t-fn) circles))
      (into [:g {:className "point-group"}] (map #(svg-point % t-fn) points))]))
 
-(comment
-  (let [circle {:stroke :grey :fill :lt-red :center n/zero :radius 1}]
-    (svg-circle circle t/t-fn))
-
-  )
-
 (defn render-turtle-component [app-state]
   (let [app @app-state
         t (get-in app [:turtle])
@@ -136,11 +169,15 @@
         circles (get-in app [:svg :circles])
         points (get-in app [:svg :points])]
     [:div
-     [:p (str ":position" (n/coords pos))]
-     [:p (str ":heading" (n/coords h))]
-     [:p (str ":svg-path " p)]
-     [:p (str ":circles " circles)]
-     [:p (str ":points " points)]
+     [:p (str "position: " (n/coords pos))]
+     [:p (str "heading: " (n/coords h))]
+     [:p (str "svg-path: " (svg-path-text p))]
+     [:p (str "circles: "
+              (clojure.string/join " "
+                                   (map (comp str text-circle) circles)))]
+     [:p (str "points: "
+              (clojure.string/join " "
+                                   (map (comp str text-point) points)))]
      (render-svg app 200 t/t-fn)]))
 
 (def turtle-channel (chan))
@@ -148,6 +185,8 @@
 (defcard-rg render-turtle
   "
 # App-State
+
+in user coordinate space
 "
   [render-turtle-component app-state]
   app-state)
@@ -158,18 +197,37 @@
 (defn two-step-circle [c1 c2]
   (list (->Forward 1)
         (->Circle c1)
-        (->Forward -2)
+        (->Point :lt-grey)
+        (->Move -2)
         (->Circle c2)
+        (->Point :lt-grey)
         (->Forward 1)))
 
 (defn circle-dance [c1 c2 c3 c4]
-  (concat (two-step-circle c1 c2)
+  (concat (list (->Point :lt-grey))
+          (two-step-circle c1 c2)
           (list (->Left))
           (two-step-circle c3 c4)))
 
+(defn half-dance [c1 c2 c3 c4]
+  (into (list
+         (->Circle :clear)
+         (->Resize (/ 2)))
+        (conj
+         (circle-dance c1 c2 c3 c4)
+         (->Resize 2))))
+
+(defn root2-flower [c1 c2 c3 c4]
+  (into (list
+         (->Circle :clear)
+         (->Resize (/ 2)))
+        (concat
+         (circle-dance c1 c2 c3 c4)
+         (list (->Resize 2)))))
+
 (go (loop []
       (let [msg (<! turtle-channel)]
-        (println msg)
+        ;; (println msg)
         (swap! app-state #(process-command msg %))
         (recur))))
 
@@ -181,6 +239,19 @@
 
   (go
     (doseq [c (circle-dance :lt-green :lt-blue :lt-red :lt-purple)]
-      (println c)
+      (>! turtle-channel c)))
+
+  (go
+    (doseq [c (half-dance :lt-green :lt-blue :lt-red :lt-purple)]
+      (>! turtle-channel c)))
+
+  (go
+    (doseq [c (root2-flower :lt-green :lt-blue :lt-red :lt-purple)]
+      (>! turtle-channel c)))
+
+  (go
+    (doseq [c (circle-dance :lt-green :lt-blue :lt-red :lt-purple)]
+      (>! turtle-channel c))
+    (doseq [c (root2-flower :lt-green :lt-blue :lt-red :lt-purple)]
       (>! turtle-channel c)))
   )

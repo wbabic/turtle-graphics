@@ -14,11 +14,47 @@
 
 ## a command execution environment
 
-using a simple turtle embedded into an svg element
+with an svg turtle embedded into an html element
 
-with a set of colored pencils
+listening in on a turtle channel
 
-that can stroke a line or fill a circle
+waiting for turtle commands
+")
+
+(defcard-doc
+  "
+# Square Turtle
+
+an svg turtle who lives in an svg element that can
+
+* make square
+* render svg
+* make integer lattice
+* make root 2 flower
+
+## Turtle state
+the state of the turtle consists of a position and a heading
+
+{:position zero :heading one}
+
+## Turtle behavior
+this turtle has the following abilities:
+
+* make a point
+* make a line
+* turn left or right (by +/- 90 degrees)
+* make a circle of any color
+
+commands include:
+
+* (->Forward d) where d is an integer
+* (->Move d) where d is an integer
+* (->Left)
+* (->Right)
+* (->Circle color)
+* (->Point color)
+* (->Resize s) where s is scale factor of 1/2 or 2
+
 ")
 
 (defn main []
