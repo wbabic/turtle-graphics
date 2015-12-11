@@ -176,8 +176,6 @@
                                    (map (comp str text-point) points)))]
      (render-svg app 200 t/t-fn)]))
 
-(def turtle-channel (chan))
-
 (defcard-rg render-turtle
   "
 ## Application State
@@ -231,6 +229,12 @@ coordinates given in user coordinate space
         (concat
          (circle-dance c1 c2 c3 c4)
          (list (->Resize 2)))))
+
+;; a turtle program execution environment consists of
+;; a turtle-channel
+;; and a go loop that listens for commands and then processes them
+;; running a program consists of sending turtle commmands to the turtle-channel
+(def turtle-channel (chan))
 
 (go (loop []
       (let [msg (<! turtle-channel)]
