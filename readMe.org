@@ -1,4 +1,20 @@
 * turtle graphics
+** usage
+   start the app with:
+   lein figwheel
+   open a browser to:
+   http://localhost:3449/cards.html
+
+   from the fighweel repl, go into a namespace:
+   (in-ns 'turtle-graphics.turtles.square.turtle)
+
+   and run turtle programs:
+   (run-program (circle-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
+
+   open browser developer tools,
+   to see turtle commands being processed in console
+   and generated svg in html
+
 ** introduction
    an svg turtle
    with a position and a heading

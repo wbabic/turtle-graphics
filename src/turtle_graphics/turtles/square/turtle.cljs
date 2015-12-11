@@ -45,8 +45,6 @@
           position (get-in app [:turtle :position])
           v (n/mult heading d)
           w (n/add position v)]
-      ;; update turtle
-      ;; update svg path
       (-> app
           (update-in [:turtle :position] #(n/add % (n/mult heading d)))
           (update-in [:svg :path] #(conj % [:L w])))))
@@ -56,8 +54,6 @@
           position (get-in app [:turtle :position])
           v (n/mult heading d)
           w (n/add position v)]
-      ;; update turtle
-      ;; update svg path
       (-> app
           (update-in [:turtle :position] #(n/add % (n/mult heading d)))
           (update-in [:svg :path] #(conj % [:M w])))))
@@ -184,12 +180,15 @@
 
 (defcard-rg render-turtle
   "
-# App-State
+## Application State
 
-in user coordinate space
+coordinates given in user coordinate space
 "
   [render-turtle-component app-state]
   app-state)
+
+
+;; turtle dances
 
 (def t-square
   (flatten (repeat 4 [(->Forward 1) (->Left)])))
@@ -210,12 +209,20 @@ in user coordinate space
           (two-step-circle c3 c4)))
 
 (defn half-dance [c1 c2 c3 c4]
-  (into (list
-         (->Circle :clear)
-         (->Resize (/ 2)))
-        (conj
-         (circle-dance c1 c2 c3 c4)
-         (->Resize 2))))
+  (flatten
+   (list
+    (->Circle :clear)
+    (->Resize (/ 2))
+    (circle-dance c1 c2 c3 c4)
+    (->Resize 2))))
+
+(defn double-dance [c1 c2 c3 c4]
+  (flatten
+   (list
+    (->Circle :clear)
+    (->Resize 2)
+    (circle-dance c1 c2 c3 c4)
+    (->Resize (/ 2)))))
 
 (defn root2-flower [c1 c2 c3 c4]
   (into (list
@@ -231,19 +238,28 @@ in user coordinate space
         (swap! app-state #(process-command msg %))
         (recur))))
 
+(defn run-program [turtle-program delay]
+  (go
+    (doseq [command turtle-program]
+      (println command)
+      (<! (timeout delay))
+      (>! turtle-channel command))))
+
 (comment
   (go
     (>! turtle-channel :hello))
   (go
     (>! turtle-channel (->Forward 1)))
+  (go
+    (>! turtle-channel (->Resize (/ 2))))
 
   (go
     (doseq [c (circle-dance :lt-green :lt-blue :lt-red :lt-purple)]
       (>! turtle-channel c)))
 
-  (go
-    (doseq [c (half-dance :lt-green :lt-blue :lt-red :lt-purple)]
-      (>! turtle-channel c)))
+  (run-program (circle-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
+  (run-program (half-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
+  (run-program (double-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
 
   (go
     (doseq [c (root2-flower :lt-green :lt-blue :lt-red :lt-purple)]

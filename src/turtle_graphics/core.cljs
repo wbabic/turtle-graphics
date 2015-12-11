@@ -1,8 +1,9 @@
 (ns turtle-graphics.core
+  "Overiew of turtle graphics in clojurescript"
   (:require
    [sablono.core :as sab :include-macros true]
    [turtle-graphics.turtles.square]
-   [turtle-graphics.turtles.square.turtle])
+   [turtle-graphics.turtles.square.turtle :as sq-t])
   (:require-macros
    [devcards.core :as dc :refer [defcard deftest defcard-doc]]))
 
@@ -12,25 +13,13 @@
   "
 # Turtle Graphics
 
-## a command execution environment
+an svg turtle
 
-with an svg turtle embedded into an html element
+embedded in an html element
 
 listening in on a turtle channel
 
 waiting for turtle commands
-")
-
-(defcard-doc
-  "
-# Square Turtle
-
-an svg turtle who lives in an svg element that can
-
-* make square
-* render svg
-* make integer lattice
-* make root 2 flower
 
 ## Turtle state
 the state of the turtle consists of a position and a heading
@@ -41,11 +30,14 @@ the state of the turtle consists of a position and a heading
 this turtle has the following abilities:
 
 * make a point
-* make a line
+* move forward
+* move forward and make a line
 * turn left or right (by +/- 90 degrees)
 * make a circle of any color
+* make a point of any color
+* resize by half or double size
 
-commands include:
+commands are data:
 
 * (->Forward d) where d is an integer
 * (->Move d) where d is an integer
@@ -55,7 +47,15 @@ commands include:
 * (->Point color)
 * (->Resize s) where s is scale factor of 1/2 or 2
 
-")
+## Turtle program
+a turtle program is a sequence of turtle commands
+
+### Square Turtle Programs
+"
+  (dc/mkdn-pprint-source sq-t/t-square)
+  (dc/mkdn-pprint-source sq-t/circle-dance)
+  (dc/mkdn-pprint-source sq-t/half-dance)
+  (dc/mkdn-pprint-source sq-t/root2-flower))
 
 (defn main []
   ;; conditionally start the app based on wether the #main-app-area
@@ -67,3 +67,7 @@ commands include:
 
 ;; remember to run lein figwheel and then browse to
 ;; http://localhost:3449/cards.html
+
+;; gallery
+
+;; square-turtle
