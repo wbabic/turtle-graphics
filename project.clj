@@ -7,9 +7,9 @@
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [org.clojure/clojurescript "1.7.170"]
                  [org.clojure/tools.reader "1.0.0-alpha1"]
-                 [org.clojure/tools.analyzer.jvm "0.6.7"]
+                 [org.clojure/tools.analyzer.jvm "0.6.9"]
                  [org.clojure/core.match "0.3.0-alpha4"]
-                 [org.clojure/core.async "0.2.371"]
+                 [org.clojure/core.async "0.2.374"]
 
                  [devcards "0.2.1"]
                  [sablono "0.4.0"]
