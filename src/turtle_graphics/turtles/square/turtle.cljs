@@ -1,7 +1,12 @@
 (ns turtle-graphics.turtles.square.turtle
   "square turtle implementation"
   (:require [complex.number :as n]
-            [cljs.core.match :refer-macros [match]]))
+            [cljs.core.match :refer-macros [match]]
+            [reagent.core :as reagent]
+            [cljs.core.async :as async :refer [>! <! put! chan alts! timeout]])
+  (:require-macros
+   [devcards.core :as dc :refer [defcard deftest defcard-rg defcard-doc]]
+   [cljs.core.async.macros :refer [go]]))
 
 (enable-console-print!)
 
@@ -10,8 +15,7 @@
 (def initial-turtle (->Square-turtle n/zero n/one))
 
 (def initial-app-state
-  {:turtle {:geometry initial-turtle
-            :style {:stroke :black :fill :white}}
+  {:turtle initial-turtle
    :svg {:path []
          :circles []
          :points []}})
@@ -20,10 +24,8 @@
 (defrecord Forward [d])
 (defrecord Left [])
 (defrecord Right [])
-(defrecord Stroke [color])
-(defrecord Fill [color])
-(defrecord Circle [])
-(defrecord Point [])
+(defrecord Circle [color])
+(defrecord Point [color])
 
 (defprotocol Command
   (process-command [command app]))
@@ -31,43 +33,72 @@
 (extend-protocol Command
   Forward
   (process-command [{d :d} app]
-    (let [heading (get-in app [:turtle :geometry :heading])]
+    (let [heading (get-in app [:turtle :heading])]
       ;; update turtle
-      (update-in app [:turtle :geometry :position] #(n/add % (n/mult heading d)))
       ;; update svg path
-      (update-in app [:svg :path] #(conj % [:l]))))
+      (-> app
+          (update-in [:turtle :position] #(n/add % (n/mult heading d)))
+          (update-in [:svg :path] #(conj % [:l])))))
   Left
   (process-command [_ app]
-    (update-in app [:turtle :geometry :heading] #(n/mult % n/i)))
+    (update-in app [:turtle :heading] #(n/mult % n/i)))
   Right
   (process-command [_ app]
-    (update-in app [:turtle :geometry :heading] #(n/mult % n/negative-i)))
-  Stroke
-  (process-command [{color :color} app]
-    (assoc-in app [:turtle :style :stroke] color))
-  Fill
-  (process-command [{color :color} app]
-    (assoc-in app [:turtle :style :fill] color))
+    (update-in app [:turtle :heading] #(n/mult % n/negative-i)))
   Circle
-  (process-command [_ app]
-    (let [s (get-in app [:turtle :style :stroke])
-          f (get-in app [:turtle :style :fill])
-          p (get-in app [:turtle :geometry :position])
-          h (get-in app [:turtle :geometry :heading])
+  (process-command [{color :color} app]
+    (let [p (get-in app [:turtle :position])
+          h (get-in app [:turtle :heading])
           r (n/length h)
-          circle [:circle {:stroke s :fill f :center p :radius r}]]
+          circle [:circle {:stroke :grey :fill color :center p :radius r}]]
       (update-in app [:svg :circles] #(conj % circle))))
   Point
-  (process-command [_ app]
-    (let [s (get-in app [:turtle :style :stroke])
-          f (get-in app [:turtle :style :fill])
-          p (get-in app [:turtle :geometry :position])
-          h (get-in app [:turtle :geometry :heading])
+  (process-command [{color :color} app]
+    (let [p (get-in app [:turtle :position])
+          h (get-in app [:turtle :heading])
           r (n/length h)
-          circle [:point {:stroke s :fill f :center p}]]
+          circle [:point {:stroke :grey :fill color :center p}]]
       (update-in app [:svg :points] #(conj % circle)))))
 
 (comment
   (process-command (->Forward 1) initial-app-state)
+  )
 
- )
+(def app-state (reagent/atom initial-app-state))
+
+(defn render-turtle-component [app-state]
+  (let [app @app-state
+        t (get-in app [:turtle])
+        h (:heading t)
+        pos (:position t)
+        p (get-in app [:svg :path])
+        circles (get-in app [:svg :circles])
+        points (get-in app [:svg :points])]
+    [:div
+     [:p (str ":position" (n/coords pos))]
+     [:p (str ":heading" (n/coords h))]
+     [:p (str ":svg-path " p)]
+     [:p (str ":circles " circles)]
+     [:p (str ":points " points)]]))
+
+(def turtle-channel (chan))
+
+(defcard-rg render-turtle
+  "
+# Render Turtle
+"
+  [render-turtle-component app-state]
+  app-state)
+
+(go (loop []
+      (let [msg (<! turtle-channel)]
+        (println msg)
+        (swap! app-state #(process-command msg %))
+        (recur))))
+
+(comment
+  (go
+    (>! turtle-channel :hello))
+  (go
+    (>! turtle-channel (->Forward 1)))
+  )

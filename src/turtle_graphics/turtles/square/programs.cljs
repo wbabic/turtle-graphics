@@ -6,11 +6,9 @@
 
 (defn two-step-circle [c1 c2]
   (list (sq-t/->Forward 1)
-        (sq-t/->Fill c1)
-        (sq-t/->Circle)
+        (sq-t/->Circle c1)
         (sq-t/->Forward -2)
-        (sq-t/->Fill c2)
-        (sq-t/->Circle)
+        (sq-t/->Circle c2)
         (sq-t/->Forward 1)))
 
 (defn circle-dance [c1 c2 c3 c4]
