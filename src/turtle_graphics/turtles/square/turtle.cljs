@@ -26,7 +26,7 @@
 (def initial-app-state
   (app-state-for-turtle initial-turtle))
 
-;; turtle commands
+;; seven turtle commands
 (defrecord Forward [d])
 (defrecord Move [d])
 (defrecord Left [])
@@ -138,7 +138,7 @@
 
 (defn text-circle [circle t-fn]
   (let [{:keys [stroke fill center radius]} circle]
-    [(n/coords center) fill]))
+    [fill (n/coords center) radius]))
 
 (defn text-point [circle t-fn]
   (let [{:keys [stroke fill center radius]} circle]
@@ -205,10 +205,27 @@ coordinates given in user coordinate space
   (flatten
    (list
     (->Point :lt-grey)
-    (->Circle :clear)
     (two-step-circle c1 c2)
     (->Left)
     (two-step-circle c3 c4)
+    (->Right))))
+
+(defn two-step-circle-no-lines [c1 c2]
+  (list (->Move 1)
+        (->Circle c1)
+        (->Point :lt-grey)
+        (->Move -2)
+        (->Circle c2)
+        (->Point :lt-grey)
+        (->Move 1)))
+
+(defn circle-dance-no-lines [c1 c2 c3 c4]
+  (flatten
+   (list
+    (->Point :lt-grey)
+    (two-step-circle-no-lines c1 c2)
+    (->Left)
+    (two-step-circle-no-lines c3 c4)
     (->Right))))
 
 (defn half-dance [c1 c2 c3 c4]
@@ -216,7 +233,17 @@ coordinates given in user coordinate space
    (list
     (->Resize (/ 2))
     (->Circle :clear)
-    (circle-dance c1 c2 c3 c4)
+    (circle-dance-no-lines c1 c2 c3 c4)
+    (->Resize 2))))
+
+(defn quarter-dance [c1 c2 c3 c4]
+  (flatten
+   (list
+    (->Resize (/ 2))
+    (->Resize (/ 2))
+    (->Circle :clear)
+    (circle-dance-no-lines c1 c2 c3 c4)
+    (->Resize 2)
     (->Resize 2))))
 
 (defn double-dance [c1 c2 c3 c4]
@@ -228,10 +255,19 @@ coordinates given in user coordinate space
     (->Resize (/ 2)))))
 
 (defn root2-flower [c1 c2 c3 c4]
-  (concat
-   (double-dance c1 c2 c3 c4)
-   (circle-dance c1 c2 c3 c4)
-   (half-dance c1 c2 c3 c4)))
+  (flatten
+   (list
+    (->Circle :clear)
+    (double-dance c1 c2 c3 c4)
+    (circle-dance c1 c2 c3 c4)
+    (half-dance c1 c2 c3 c4))))
+
+(defn turtle-shell [c1 c2 c3 c4]
+  (flatten
+   (list
+    (->Circle :clear)
+    (half-dance c1 c2 c3 c4)
+    (quarter-dance c1 c2 c3 c4))))
 
 ;; a turtle program execution environment consists of
 ;; a turtle-channel
@@ -253,20 +289,16 @@ coordinates given in user coordinate space
       (>! turtle-channel command))))
 
 (comment
-  (go
-    (>! turtle-channel :hello))
-  (go
-    (>! turtle-channel (->Forward 1)))
-  (go
-    (>! turtle-channel (->Resize (/ 2))))
-
-  (go
-    (doseq [c (circle-dance :lt-green :lt-blue :lt-red :lt-purple)]
-      (>! turtle-channel c)))
-
+  (in-ns 'turtle-graphics.turtles.square.turtle)
   (run-program (circle-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
   (run-program (half-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
   (run-program (double-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
+  (run-program (root2-flower :lt-green :lt-blue :lt-red :lt-purple) 100)
+  (run-program (turtle-shell :lt-green :lt-blue :lt-red :lt-purple) 100)
 
-  (run-program (root2-flower :lt-green :lt-blue :lt-red :lt-purple) 500)
+  (run-program
+   (concat
+    (turtle-shell :lt-green :lt-blue :lt-red :lt-purple)
+    (double-dance :lt-green :lt-blue :lt-red :lt-purple)
+    (circle-dance :lt-green :lt-blue :lt-red :lt-purple)) 100)
   )
