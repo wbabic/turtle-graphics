@@ -201,10 +201,13 @@ coordinates given in user coordinate space
         (->Forward 1)))
 
 (defn circle-dance [c1 c2 c3 c4]
-  (concat (list (->Point :lt-grey))
-          (two-step-circle c1 c2)
-          (list (->Left))
-          (two-step-circle c3 c4)))
+  (flatten
+   (list
+    (->Point :lt-grey)
+    (two-step-circle c1 c2)
+    (->Left)
+    (two-step-circle c3 c4)
+    (->Right))))
 
 (defn half-dance [c1 c2 c3 c4]
   (flatten
@@ -223,12 +226,10 @@ coordinates given in user coordinate space
     (->Resize (/ 2)))))
 
 (defn root2-flower [c1 c2 c3 c4]
-  (into (list
-         (->Circle :clear)
-         (->Resize (/ 2)))
-        (concat
-         (circle-dance c1 c2 c3 c4)
-         (list (->Resize 2)))))
+  (concat
+   (double-dance c1 c2 c3 c4)
+   (circle-dance c1 c2 c3 c4)
+   (half-dance c1 c2 c3 c4)))
 
 ;; a turtle program execution environment consists of
 ;; a turtle-channel
@@ -265,13 +266,10 @@ coordinates given in user coordinate space
   (run-program (half-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
   (run-program (double-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
 
-  (go
-    (doseq [c (root2-flower :lt-green :lt-blue :lt-red :lt-purple)]
-      (>! turtle-channel c)))
+  (run-program (root2-flower :lt-green :lt-blue :lt-red :lt-purple) 1000)
 
-  (go
-    (doseq [c (circle-dance :lt-green :lt-blue :lt-red :lt-purple)]
-      (>! turtle-channel c))
-    (doseq [c (root2-flower :lt-green :lt-blue :lt-red :lt-purple)]
-      (>! turtle-channel c)))
+  (run-program (concat
+                (circle-dance :lt-green :lt-blue :lt-red :lt-purple)
+                (root2-flower :lt-green :lt-blue :lt-red :lt-purple))
+               300)
   )
