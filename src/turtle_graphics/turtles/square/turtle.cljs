@@ -213,10 +213,8 @@ coordinates given in user coordinate space
 (defn two-step-circle-no-lines [c1 c2]
   (list (->Move 1)
         (->Circle c1)
-        (->Point :lt-grey)
         (->Move -2)
         (->Circle c2)
-        (->Point :lt-grey)
         (->Move 1)))
 
 (defn circle-dance-no-lines [c1 c2 c3 c4]
