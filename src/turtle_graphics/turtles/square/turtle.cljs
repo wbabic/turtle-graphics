@@ -254,6 +254,16 @@ coordinates given in user coordinate space
     (circle-dance c1 c2 c3 c4)
     (->Resize (/ 2)))))
 
+(defn quad-dance [c1 c2 c3 c4]
+  (flatten
+   (list
+    (->Resize 2)
+    (->Resize 2)
+    (->Circle :clear)
+    (circle-dance c1 c2 c3 c4)
+    (->Resize (/ 2))
+    (->Resize (/ 2)))))
+
 (defn root2-flower [c1 c2 c3 c4]
   (flatten
    (list
@@ -292,7 +302,9 @@ coordinates given in user coordinate space
   (in-ns 'turtle-graphics.turtles.square.turtle)
   (run-program (circle-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
   (run-program (half-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
+  (run-program (quarter-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
   (run-program (double-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
+  (run-program (quad-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
   (run-program (root2-flower :lt-green :lt-blue :lt-red :lt-purple) 100)
   (run-program (turtle-shell :lt-green :lt-blue :lt-red :lt-purple) 100)
 
@@ -300,4 +312,13 @@ coordinates given in user coordinate space
    (concat
     (turtle-shell :lt-green :lt-blue :lt-red :lt-purple)
     (double-dance :lt-green :lt-blue :lt-red :lt-purple)
-    (circle-dance :lt-green :lt-blue :lt-red :lt-purple)) 100))
+    (circle-dance :lt-green :lt-blue :lt-red :lt-purple)) 100)
+
+  (run-program
+   (concat
+    (quad-dance :lt-green :lt-blue :lt-red :lt-purple)
+    (double-dance :lt-green :lt-blue :lt-red :lt-purple)
+    (double-dance :lt-green :lt-blue :lt-red :lt-purple)
+    (circle-dance :lt-green :lt-blue :lt-red :lt-purple)
+    (half-dance :lt-green :lt-blue :lt-red :lt-purple)
+    (quarter-dance :lt-green :lt-blue :lt-red :lt-purple)) 100))
