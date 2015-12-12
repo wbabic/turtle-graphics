@@ -83,8 +83,8 @@
     (update-in app [:turtle :heading] #(n/mult % s))))
 
 (comment
-  (process-command (->Forward 1) initial-app-state)
-  )
+  (process-command (->Forward 1) initial-app-state))
+
 
 (def app-state (reagent/atom initial-app-state))
 
@@ -300,5 +300,4 @@ coordinates given in user coordinate space
    (concat
     (turtle-shell :lt-green :lt-blue :lt-red :lt-purple)
     (double-dance :lt-green :lt-blue :lt-red :lt-purple)
-    (circle-dance :lt-green :lt-blue :lt-red :lt-purple)) 100)
-  )
+    (circle-dance :lt-green :lt-blue :lt-red :lt-purple)) 100))

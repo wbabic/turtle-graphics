@@ -64,6 +64,5 @@
   (t/t-fn n/zero)
   ;;=> [100 100]
 
-  (t/color-table :red)
+  (t/color-table :red))
   ;;=> "#ff0000"
-  )
