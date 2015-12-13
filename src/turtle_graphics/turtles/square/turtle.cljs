@@ -166,6 +166,7 @@
         circles (get-in app [:svg :circles])
         points (get-in app [:svg :points])]
     [:div
+     (render-svg app 200 t/t-fn)
      [:p (str "position: " (n/coords pos))]
      [:p (str "heading: " (n/coords h))]
      [:p (str "svg-path: " (svg-path-text p))]
@@ -174,14 +175,44 @@
                                    (map (comp str text-circle) circles)))]
      [:p (str "points: "
               (clojure.string/join " "
-                                   (map (comp str text-point) points)))]
-     (render-svg app 200 t/t-fn)]))
+                                   (map (comp str text-point) points)))]]))
 
 (defcard-rg render-turtle
   "
-## Application State
+## A rendering of application state
 
-coordinates given in user coordinate space
+application state consists of
+
+* a turtle with position and heading
+* an svg path of lines and moves
+* circles and points
+
+there is:
+
+* a turtle channel
+* a recurring go loop
+* a command processer
+
+a turtle command is put on the turtle channel
+the go loop picks up the command and sends it to the comand processor
+which updates the application state and
+causes a rerendering of the page
+
+use run-program, in this namespace,
+
+```clojure
+(run-program
+   (concat
+    (quad-dance :lt-green :lt-blue :lt-red :lt-purple)
+    (double-dance :lt-green :lt-blue :lt-red :lt-purple)
+    (circle-dance :lt-green :lt-blue :lt-red :lt-purple)
+    (half-dance :lt-green :lt-blue :lt-red :lt-purple)
+    (quarter-dance :lt-green :lt-blue :lt-red :lt-purple)) 100)
+```
+
+to send a sequence of commands to the turtle channle
+and watch the turtle program run
+
 "
   [render-turtle-component app-state]
   app-state)
@@ -315,7 +346,6 @@ coordinates given in user coordinate space
   (run-program
    (concat
     (quad-dance :lt-green :lt-blue :lt-red :lt-purple)
-    (double-dance :lt-green :lt-blue :lt-red :lt-purple)
     (double-dance :lt-green :lt-blue :lt-red :lt-purple)
     (circle-dance :lt-green :lt-blue :lt-red :lt-purple)
     (half-dance :lt-green :lt-blue :lt-red :lt-purple)
