@@ -56,6 +56,7 @@ which can be created using clojure functions
 ### Square Turtle Programs
 "
   (dc/mkdn-pprint-source sq-t/t-square)
+  (dc/mkdn-pprint-source sq-t/two-step-circle)
   (dc/mkdn-pprint-source sq-t/circle-dance)
   (dc/mkdn-pprint-source sq-t/half-dance)
   (dc/mkdn-pprint-source sq-t/root2-flower)

@@ -210,7 +210,7 @@ use run-program, in this namespace,
     (quarter-dance :lt-green :lt-blue :lt-red :lt-purple)) 100)
 ```
 
-to send a sequence of commands to the turtle channle
+to send a sequence of commands to the turtle channel
 and watch the turtle program run
 
 "
@@ -349,4 +349,4 @@ and watch the turtle program run
     (double-dance :lt-green :lt-blue :lt-red :lt-purple)
     (circle-dance :lt-green :lt-blue :lt-red :lt-purple)
     (half-dance :lt-green :lt-blue :lt-red :lt-purple)
-    (quarter-dance :lt-green :lt-blue :lt-red :lt-purple)) 100))
+    (quarter-dance :lt-green :lt-blue :lt-red :lt-purple)) 10))
