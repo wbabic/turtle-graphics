@@ -187,7 +187,7 @@ application state consists of
 * an svg path of lines and moves
 * circles and points
 
-there is:
+there is
 
 * a turtle channel
 * a recurring go loop
@@ -261,7 +261,6 @@ and watch the turtle program run
   (flatten
    (list
     (->Resize (/ 2))
-    (->Circle :clear)
     (circle-dance-no-lines c1 c2 c3 c4)
     (->Resize 2))))
 
@@ -270,7 +269,6 @@ and watch the turtle program run
    (list
     (->Resize (/ 2))
     (->Resize (/ 2))
-    (->Circle :clear)
     (circle-dance-no-lines c1 c2 c3 c4)
     (->Resize 2)
     (->Resize 2))))
@@ -279,7 +277,6 @@ and watch the turtle program run
   (flatten
    (list
     (->Resize 2)
-    (->Circle :clear)
     (circle-dance c1 c2 c3 c4)
     (->Resize (/ 2)))))
 
@@ -288,7 +285,6 @@ and watch the turtle program run
    (list
     (->Resize 2)
     (->Resize 2)
-    (->Circle :clear)
     (circle-dance c1 c2 c3 c4)
     (->Resize (/ 2))
     (->Resize (/ 2)))))
@@ -306,7 +302,9 @@ and watch the turtle program run
    (list
     (->Circle :clear)
     (half-dance c1 c2 c3 c4)
-    (quarter-dance c1 c2 c3 c4))))
+    (->Left) (->Left)
+    (quarter-dance c1 c2 c3 c4)
+    (->Left) (->Left))))
 
 ;; a turtle program execution environment consists of
 ;; a turtle-channel
