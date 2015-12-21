@@ -37,50 +37,50 @@
 
 ;; turtle command processor
 (defprotocol Command
-  (process-command [command app]))
+  (process-command [command app-state]))
 
 (extend-protocol Command
   Forward
-  (process-command [{d :d} app]
-    (let [heading (get-in app [:turtle :heading])
-          position (get-in app [:turtle :position])
+  (process-command [{d :d} app-state]
+    (let [heading (get-in app-state [:turtle :heading])
+          position (get-in app-state [:turtle :position])
           v (n/mult heading d)
           w (n/add position v)]
-      (-> app
+      (-> app-state
           (update-in [:turtle :position] #(n/add % (n/mult heading d)))
           (update-in [:svg :path] #(conj % [:L w])))))
   Move
-  (process-command [{d :d} app]
-    (let [heading (get-in app [:turtle :heading])
-          position (get-in app [:turtle :position])
+  (process-command [{d :d} app-state]
+    (let [heading (get-in app-state [:turtle :heading])
+          position (get-in app-state [:turtle :position])
           v (n/mult heading d)
           w (n/add position v)]
-      (-> app
+      (-> app-state
           (update-in [:turtle :position] #(n/add % (n/mult heading d)))
           (update-in [:svg :path] #(conj % [:M w])))))
   Left
-  (process-command [_ app]
-    (update-in app [:turtle :heading] #(n/mult % n/i)))
+  (process-command [_ app-state]
+    (update-in app-state [:turtle :heading] #(n/mult % n/i)))
   Right
-  (process-command [_ app]
-    (update-in app [:turtle :heading] #(n/mult % n/negative-i)))
+  (process-command [_ app-state]
+    (update-in app-state [:turtle :heading] #(n/mult % n/negative-i)))
   Circle
-  (process-command [{color :color} app]
-    (let [p (get-in app [:turtle :position])
-          h (get-in app [:turtle :heading])
+  (process-command [{color :color} app-state]
+    (let [p (get-in app-state [:turtle :position])
+          h (get-in app-state [:turtle :heading])
           r (n/length h)
           circle {:stroke :grey :fill color :center p :radius r}]
-      (update-in app [:svg :circles] #(conj % circle))))
+      (update-in app-state [:svg :circles] #(conj % circle))))
   Point
-  (process-command [{color :color} app]
-    (let [p (get-in app [:turtle :position])
-          h (get-in app [:turtle :heading])
+  (process-command [{color :color} app-state]
+    (let [p (get-in app-state [:turtle :position])
+          h (get-in app-state [:turtle :heading])
           r (n/length h)
           circle {:stroke :grey :fill color :center p}]
-      (update-in app [:svg :points] #(conj % circle))))
+      (update-in app-state [:svg :points] #(conj % circle))))
   Resize
-  (process-command [{s :s} app]
-    (update-in app [:turtle :heading] #(n/mult % s))))
+  (process-command [{s :s} app-state]
+    (update-in app-state [:turtle :heading] #(n/mult % s))))
 
 (comment
   (process-command (->Forward 1) initial-app-state))

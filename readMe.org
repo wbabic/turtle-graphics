@@ -40,18 +40,26 @@
 
 ** turtle state
    the turtle state consists of a position and a heading
-   as well as stroke and fill colors
+
+   the position is a point in the plane
+   the heading is a 2d vector
+
+   the heading and position are changed by turtle commands
 ** turtle commands
+   as data, hiccup style
    [:move d]
    [:forward d]
    [:turn a]
    [:resize s]
 
-   [:repeat n [...]]
-
-   as data, hiccup style
-
-   and as funtions
+    as data, clojure records
+    (->Move d)
+    (->Forward d)
+    (->Left)
+    (->Right)
+    (->Circle color)
+    (->Point point)
+    (->Resize s)
 
 ** svg rendering
    [:svg {:width 200 :height 200}
