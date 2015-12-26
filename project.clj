@@ -11,7 +11,7 @@
                  [org.clojure/core.match "0.3.0-alpha4"]
                  [org.clojure/core.async "0.2.374"]
 
-                 [devcards "0.2.1"]
+                 [devcards "0.2.1-2"]
                  [sablono "0.4.0"]
                  [org.omcljs/om "0.9.0"]
                  [reagent "0.5.1"]

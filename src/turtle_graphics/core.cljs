@@ -72,7 +72,7 @@ by updating the app-state ratom
 
 each update triggers a re-render
 
-visit the 'turtle-graphics.turtles.square.turtle namspace
+visit the 'turtle-graphics.turtles.square.turtle namespace
 
 for a live working example where programs can be run from a repl
 
