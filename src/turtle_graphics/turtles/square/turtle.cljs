@@ -251,7 +251,6 @@ and watch the turtle program run
 (defn circle-dance-no-lines [c1 c2 c3 c4]
   (flatten
    (list
-    (->Point :lt-grey)
     (two-step-circle-no-lines c1 c2)
     (->Left)
     (two-step-circle-no-lines c3 c4)
