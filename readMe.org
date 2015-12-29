@@ -52,7 +52,7 @@
    [:turn a]
    [:resize s]
 
-    as data, clojure records
+    as data, using clojure records
     (->Move d)
     (->Forward d)
     (->Left)
@@ -104,6 +104,12 @@
 *** processing-turtle
 *** electron-turtle
 ** famous turtles
+*** simple turtle
+    responds only to commands
+    Move, Turn, Resize
+    can only display its own shell
+    in svg
+
 *** turtle robot
     on the floor of the mit ui department
     and then onto the screen as a virtual turtle
