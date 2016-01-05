@@ -11,7 +11,7 @@
                  [org.clojure/core.match "0.3.0-alpha4"]
                  [org.clojure/core.async "0.2.374"]
 
-                 [devcards "0.2.1-2"]
+                 [devcards "0.2.1-3"]
                  [sablono "0.4.0"]
                  [org.omcljs/om "0.9.0"]
                  [reagent "0.5.1"]
@@ -26,8 +26,8 @@
                  [clj-time "0.9.0"]
                  [ring/ring-core "1.4.0"]]
 
-  :plugins [[lein-cljsbuild "1.1.1"]
-            [lein-figwheel "0.5.0-1" :exclusions [org.clojure/clojure
+  :plugins [[lein-cljsbuild "1.1.2"]
+            [lein-figwheel "0.5.0-2" :exclusions [org.clojure/clojure
                                                   ring/ring-core joda-time
                                                   org.clojure/tools.reader]]]
 
