@@ -1,6 +1,7 @@
 (ns turtle-graphics.turtles.simple.turtle
   "square turtle implementation"
-  (:require [complex.number :as n]
+  (:require [devcards.core]
+            [complex.number :as n]
             [turtle-graphics.transforms :as t]
             [cljs.core.match :refer-macros [match]]
             [reagent.core :as reagent]
