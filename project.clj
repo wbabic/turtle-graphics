@@ -11,8 +11,13 @@
                  [org.clojure/core.match "0.3.0-alpha4"]
                  [org.clojure/core.async "0.2.374"]
 
-                 [devcards "0.2.1-3"]
-                 [sablono "0.4.0"]
+                 [devcards "0.2.1-4"]
+                 [figwheel-sidecar "0.5.0-3"
+                  :exclusions [clj-time
+                               joda-time
+                               org.clojure/tools.reader]
+                  :scope "test"]
+                 [sablono "0.5.3"]
                  [org.omcljs/om "0.9.0"]
                  [reagent "0.5.1"]
 
@@ -26,38 +31,25 @@
                  [clj-time "0.9.0"]
                  [ring/ring-core "1.4.0"]]
 
-  :plugins [[lein-cljsbuild "1.1.2"]
-            [lein-figwheel "0.5.0-2" :exclusions [org.clojure/clojure
-                                                  ring/ring-core joda-time
-                                                  org.clojure/tools.reader]]]
-
-  :clean-targets ^{:protect false} ["resources/public/js/compiled"
-                                    "target"]
-
   :source-paths ["src"]
 
-  :cljsbuild {
-              :builds [{:id "devcards"
-                        :source-paths ["src"]
-                        :figwheel { :devcards true}  ;; <- note this
-                        :compiler { :main       "turtle-graphics.core"
-                                    :asset-path "js/compiled/devcards_out"
-                                    :output-to  "resources/public/js/compiled/turtle_graphics_devcards.js"
-                                    :output-dir "resources/public/js/compiled/devcards_out"
-                                    :source-map-timestamp true}}
-                       {:id "dev"
-                        :source-paths ["src"]
-                        :figwheel true
-                        :compiler {:main       "turtle-graphics.core"
-                                   :asset-path "js/compiled/out"
-                                   :output-to  "resources/public/js/compiled/turtle_graphics.js"
-                                   :output-dir "resources/public/js/compiled/out"
-                                   :source-map-timestamp true}}
-                       {:id "prod"
-                        :source-paths ["src"]
-                        :compiler {:main       "turtle-graphics.core"
-                                   :asset-path "js/compiled/out"
-                                   :output-to  "resources/public/js/compiled/turtle_graphics.js"
-                                   :optimizations :advanced}}]}
+  :plugins [[lein-cljsbuild "1.1.2"]]
 
-  :figwheel { :css-dirs ["resources/public/css"]})
+  :clean-targets ^{:protect false} ["resources/public/cards"
+                                    "target"]
+
+  :figwheel {:build-ids ["cards"]
+             :css-dirs ["resources/public/css"]}
+
+  :cljsbuild {
+              :builds
+              [
+               {:id           "cards"
+                :figwheel     {:devcards true}
+                :source-paths ["src"]
+                :compiler     {:main       turtle-graphics.devcards
+                               :source-map-timestamp true
+                               :asset-path "cards"
+                               :output-to  "resources/public/cards/main.js"
+                               :output-dir "resources/public/cards"}}
+               ]})

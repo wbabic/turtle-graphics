@@ -1,9 +1,14 @@
 * turtle graphics
 ** usage
    start the app with:
-   lein figwheel
+   lein run -m clojure.main script/figwheel.clj
+
    open a browser to:
-   http://localhost:3449/cards.html
+   http://localhost:3451/cards.html
+
+   from the clojure repl:
+   > (start-dev)
+   to get a figwheel repl
 
    from the fighweel repl, go into a namespace:
    (in-ns 'turtle-graphics.turtles.square.turtle)

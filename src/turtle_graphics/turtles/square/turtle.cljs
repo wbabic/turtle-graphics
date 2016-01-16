@@ -1,6 +1,10 @@
 (ns turtle-graphics.turtles.square.turtle
   "square turtle implementation"
   (:require [devcards.core]
+            [turtle-graphics.core :refer [Command]]
+            [turtle-graphics.turtles.square.state :as s]
+            [turtle-graphics.turtles.square.programs :as p]
+            [turtle-graphics.turtles.square.processor]
             [complex.number :as n]
             [turtle-graphics.transforms :as t]
             [cljs.core.match :refer-macros [match]]
@@ -12,82 +16,7 @@
 
 (enable-console-print!)
 
-(defrecord Square-turtle [position heading])
-
-(def initial-turtle (->Square-turtle n/zero n/one))
-
-(defn app-state-for-turtle
-  [turtle]
-  (let [position (:position turtle)]
-    {:turtle turtle
-     :svg {:path [[:M position]]
-           :circles []
-           :points []}}))
-
-(def initial-app-state
-  (app-state-for-turtle initial-turtle))
-
-;; seven turtle commands
-(defrecord Forward [d])
-(defrecord Move [d])
-(defrecord Left [])
-(defrecord Right [])
-(defrecord Circle [color])
-(defrecord Point [color])
-(defrecord Resize [s])
-
-;; turtle command processor
-(defprotocol Command
-  (process-command [command app-state]))
-
-(extend-protocol Command
-  Forward
-  (process-command [{d :d} app-state]
-    (let [heading (get-in app-state [:turtle :heading])
-          position (get-in app-state [:turtle :position])
-          v (n/mult heading d)
-          w (n/add position v)]
-      (-> app-state
-          (update-in [:turtle :position] #(n/add % (n/mult heading d)))
-          (update-in [:svg :path] #(conj % [:L w])))))
-  Move
-  (process-command [{d :d} app-state]
-    (let [heading (get-in app-state [:turtle :heading])
-          position (get-in app-state [:turtle :position])
-          v (n/mult heading d)
-          w (n/add position v)]
-      (-> app-state
-          (update-in [:turtle :position] #(n/add % (n/mult heading d)))
-          (update-in [:svg :path] #(conj % [:M w])))))
-  Left
-  (process-command [_ app-state]
-    (update-in app-state [:turtle :heading] #(n/mult % n/i)))
-  Right
-  (process-command [_ app-state]
-    (update-in app-state [:turtle :heading] #(n/mult % n/negative-i)))
-  Circle
-  (process-command [{color :color} app-state]
-    (let [p (get-in app-state [:turtle :position])
-          h (get-in app-state [:turtle :heading])
-          r (n/length h)
-          circle {:stroke :grey :fill color :center p :radius r}]
-      (update-in app-state [:svg :circles] #(conj % circle))))
-  Point
-  (process-command [{color :color} app-state]
-    (let [p (get-in app-state [:turtle :position])
-          h (get-in app-state [:turtle :heading])
-          r (n/length h)
-          circle {:stroke :grey :fill color :center p}]
-      (update-in app-state [:svg :points] #(conj % circle))))
-  Resize
-  (process-command [{s :s} app-state]
-    (update-in app-state [:turtle :heading] #(n/mult % s))))
-
-(comment
-  (process-command (->Forward 1) initial-app-state))
-
-
-(def app-state (reagent/atom initial-app-state))
+(def app-state (reagent/atom s/initial-app-state))
 
 (defn svg-command->string [command t-fn]
   (match command
@@ -218,93 +147,6 @@ and watch the turtle program run
   [render-turtle-component app-state]
   app-state)
 
-
-;; turtle dances
-
-(def t-square
-  (flatten (repeat 4 [(->Forward 1) (->Left)])))
-
-(defn two-step-circle [c1 c2]
-  (list (->Forward 1)
-        (->Circle c1)
-        (->Point :lt-grey)
-        (->Move -2)
-        (->Circle c2)
-        (->Point :lt-grey)
-        (->Forward 1)))
-
-(defn circle-dance [c1 c2 c3 c4]
-  (flatten
-   (list
-    (->Point :lt-grey)
-    (two-step-circle c1 c2)
-    (->Left)
-    (two-step-circle c3 c4)
-    (->Right))))
-
-(defn two-step-circle-no-lines [c1 c2]
-  (list (->Move 1)
-        (->Circle c1)
-        (->Move -2)
-        (->Circle c2)
-        (->Move 1)))
-
-(defn circle-dance-no-lines [c1 c2 c3 c4]
-  (flatten
-   (list
-    (two-step-circle-no-lines c1 c2)
-    (->Left)
-    (two-step-circle-no-lines c3 c4)
-    (->Right))))
-
-(defn half-dance [c1 c2 c3 c4]
-  (flatten
-   (list
-    (->Resize (/ 2))
-    (circle-dance-no-lines c1 c2 c3 c4)
-    (->Resize 2))))
-
-(defn quarter-dance [c1 c2 c3 c4]
-  (flatten
-   (list
-    (->Resize (/ 2))
-    (->Resize (/ 2))
-    (circle-dance-no-lines c1 c2 c3 c4)
-    (->Resize 2)
-    (->Resize 2))))
-
-(defn double-dance [c1 c2 c3 c4]
-  (flatten
-   (list
-    (->Resize 2)
-    (circle-dance c1 c2 c3 c4)
-    (->Resize (/ 2)))))
-
-(defn quad-dance [c1 c2 c3 c4]
-  (flatten
-   (list
-    (->Resize 2)
-    (->Resize 2)
-    (circle-dance c1 c2 c3 c4)
-    (->Resize (/ 2))
-    (->Resize (/ 2)))))
-
-(defn root2-flower [c1 c2 c3 c4]
-  (flatten
-   (list
-    (->Circle :clear)
-    (double-dance c1 c2 c3 c4)
-    (circle-dance c1 c2 c3 c4)
-    (half-dance c1 c2 c3 c4))))
-
-(defn turtle-shell [c1 c2 c3 c4]
-  (flatten
-   (list
-    (->Circle :clear)
-    (half-dance c1 c2 c3 c4)
-    (->Left) (->Left)
-    (quarter-dance c1 c2 c3 c4)
-    (->Left) (->Left))))
 
 ;; a turtle program execution environment consists of
 ;; a turtle-channel

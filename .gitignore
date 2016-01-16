@@ -1,3 +1,7 @@
 /figwheel_server.log
 /resources/public/js/
 /target/
+/.DS_Store
+/.lein-repl-history
+/src/.DS_Store
+/src/turtle_graphics/turtles/.DS_Store
