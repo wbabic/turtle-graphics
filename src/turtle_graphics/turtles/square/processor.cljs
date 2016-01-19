@@ -1,6 +1,7 @@
 (ns turtle-graphics.turtles.square.processor
-  (:require [turtle-graphics.turtles.square.commands :as c]
-            [turtle-graphics.core :refer [Command]]
+  (:require [turtle-graphics.core :refer [Command]]
+            [turtle-graphics.turtles.square.commands :as c]
+            [turtle-graphics.turtles.square.state :as s]
             [complex.number :as n]))
 
 (extend-protocol Command
@@ -47,6 +48,10 @@
     (update-in app-state [:turtle :heading] #(n/mult % s))))
 
 (comment
-  (require '[turtle-graphics.turtles.square.processor] :reload)
   (in-ns 'turtle-graphics.turtles.square.processor)
+  (c/->Forward 10)
+  ;;=> #turtle-graphics.turtles.square.commands.Forward{:d 10}
+  s/initial-turtle
+
+
   )

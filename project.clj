@@ -1,5 +1,5 @@
-(defproject turtle-graphics "0.1.0-SNAPSHOT"
-  :description "Turtle Graphics for clojurescript"
+(defproject turtle-graphics "0.1.1"
+  :description "Turtle Graphics in clojurescript"
   :url "http://wbabic.github.io"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
@@ -35,8 +35,7 @@
 
   :plugins [[lein-cljsbuild "1.1.2"]]
 
-  :clean-targets ^{:protect false} ["resources/public/cards"
-                                    "target"]
+  :clean-targets ^{:protect false} ["resources/public/cards" "target"]
 
   :figwheel {:build-ids ["cards"]
              :css-dirs ["resources/public/css"]}

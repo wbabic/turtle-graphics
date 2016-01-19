@@ -2,6 +2,9 @@
   (:require
    [sablono.core :as sab :include-macros true]
    [turtle-graphics.turtles.square.programs :as p]
+   [turtle-graphics.turtles.square.turtle]
+   [turtle-graphics.turtles.simple.core]
+   [turtle-graphics.turtles.simple.turtle]
    [devcards.core])
   (:require-macros
    [devcards.core :as dc :refer [defcard deftest defcard-doc]]))
@@ -10,39 +13,43 @@
   "
 # Turtle Graphics
 
-an svg turtle
-
-embedded in an html element
-
-listening in on a turtle channel
-
-waiting for turtle commands to prosess
+* a simple turtle in an svg context
+* embedded in an html element
+* living in a web page
+* listening in on a turtle channel
+* waiting for turtle commands to process
 
 ## Turtle state
-the state of the turtle consists of a position and a heading
+The state of the turtle consists of a position in the plane and a heading vector,
+like so:
 
-{:position zero :heading one}
+{:position [0 0] :heading {:length 1 :angle 0}}
 
-## Turtle behavior
-this turtle has the following abilities:
+## Turtle commands
+This turtle understands the following commands:
 
-* make a point
 * move forward
-* move forward making a line as you go
-* turn left or right (by +/- 90 degrees)
-* make a circle of any color
-* make a point of any color
+* turn left by 90 degrees
+* turn right by 90 degrees
 * resize by half or double
 
-commands are represented as data:
+which are represented as data records:
 
 * (->Forward d) where d is an integer
-* (->Move d) where d is an integer
 * (->Left)
 * (->Right)
-* (->Circle color)
-* (->Point color)
 * (->Resize s) where s is scale factor of 1/2 or 2
+
+Each command implements the method
+
+(process-command [command state])
+
+of the Processor protocol.
+
+## Turtle command processor
+The turtle state is transformed in some way by the turtle commands.
+The command processor listens for turtle commands placed on it's turtle channel.
+Upon receiving a command the atom is swaped for the new transformed state.
 
 ## Turtle programs
 a turtle program is a sequence of turtle commands,

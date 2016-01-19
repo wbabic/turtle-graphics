@@ -2,11 +2,12 @@
   "square turtle implementation"
   (:require [devcards.core]
             [turtle-graphics.core :refer [Command]]
+            [turtle-graphics.transforms :as t]
             [turtle-graphics.turtles.square.state :as s]
+            [turtle-graphics.turtles.square.commands :as c]
             [turtle-graphics.turtles.square.programs :as p]
             [turtle-graphics.turtles.square.processor]
             [complex.number :as n]
-            [turtle-graphics.transforms :as t]
             [cljs.core.match :refer-macros [match]]
             [reagent.core :as reagent]
             [cljs.core.async :as async :refer [>! <! put! chan alts! timeout]])
@@ -147,7 +148,6 @@ and watch the turtle program run
   [render-turtle-component app-state]
   app-state)
 
-
 ;; a turtle program execution environment consists of
 ;; a turtle-channel
 ;; and a go loop that listens for commands and then processes them
@@ -155,9 +155,9 @@ and watch the turtle program run
 (def turtle-channel (chan))
 
 (go (loop []
-      (let [msg (<! turtle-channel)]
-        ;; (println msg)
-        (swap! app-state #(process-command msg %))
+      (let [command (<! turtle-channel)]
+        (println command)
+        ;; (swap! app-state #(process-command command %))
         (recur))))
 
 (defn run-program [turtle-program delay]
@@ -169,7 +169,10 @@ and watch the turtle program run
 
 (comment
   (in-ns 'turtle-graphics.turtles.square.turtle)
-  (run-program (circle-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
+  (p/circle-dance :lt-green :lt-blue :lt-red :lt-purple)
+  (keys @app-state)
+  (c/->Forward 10)
+  (run-program (p/circle-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
   (run-program (half-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
   (run-program (quarter-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
   (run-program (double-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
