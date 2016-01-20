@@ -42,7 +42,6 @@ Using devcards and reagent, consisting of
 (defn process-channel [turtle-channel]
   (go (loop []
         (let [command (<! turtle-channel)]
-          (println command)
           (swap! app-state #(t/process-command command %))
           (recur)))))
 
@@ -133,8 +132,8 @@ Using devcards and reagent, consisting of
   [:div
    [:button {:on-click (send! turtle-channel (t/->Forward 1))} "Forward"]
    [:button {:on-click (send! turtle-channel (t/->Forward -1))} "Backward"]
-   [:button {:on-click (send! turtle-channel (t/->Left))} "Left"]
-   [:button {:on-click (send! turtle-channel (t/->Right))} "Right"]
+   [:button {:on-click (send! turtle-channel (t/->Right))} "Left"]
+   [:button {:on-click (send! turtle-channel (t/->Left))} "Right"]
    [:button {:on-click (send! turtle-channel (t/->Resize (/ 2)))} "Half"]
    [:button {:on-click (send! turtle-channel (t/->Resize 2))} "Double"]])
 
