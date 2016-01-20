@@ -4,12 +4,17 @@
    [turtle-graphics.turtles.simple.turtle :as t]
    [devcards.core]
    [reagent.core :as reagent]
-   [complex.vector :as v])
+   [complex.vector :as v]
+   [cljs.core.async :as async :refer [>! <! put! chan alts! timeout]])
   (:require-macros
-   [devcards.core :as dc :refer [defcard deftest defcard-doc defcard-rg]]))
+   [devcards.core :as dc :refer [defcard deftest defcard-doc defcard-rg]]
+   [cljs.core.async.macros :refer [go]]))
+
+(enable-console-print!)
 
 (comment
   (in-ns 'turtle-graphics.turtles.simple.core)
+  (t/process-command (t/->Forward 1) init-state)
   )
 
 (defcard-doc
@@ -29,6 +34,19 @@ Using devcards and reagent, consisting of
   {:turtle {:position [200 200] :heading {:angle 0 :length 100}}})
 
 (def app-state (reagent/atom init-state))
+
+;; a turtle channnel to put turtle commands onto
+(def turtle-channel (chan))
+
+;; a turtle channel processor that listens to the turtle channel
+(defn process-channel [turtle-channel]
+  (go (loop []
+        (let [command (<! turtle-channel)]
+          (println command)
+          (swap! app-state #(t/process-command command %))
+          (recur)))))
+
+(process-channel turtle-channel)
 
 (defn render-turtle-as-data [app-state]
   (let [app @app-state
@@ -102,3 +120,23 @@ Using devcards and reagent, consisting of
   "A reagent devcard to display turtle state as svg."
   [render-turtle-as-svg app-state]
   app-state)
+
+(defn send!
+  "Send information from the user to the message queue.
+  The message must be a record which implements the Message protocol."
+  [channel message]
+  (fn [dom-event]
+    (put! channel message)
+    (.stopPropagation dom-event)))
+
+(defn turtle-command-buttons []
+  [:div
+   [:button {:on-click (send! turtle-channel (t/->Forward 1))} "Forward"]
+   [:button {:on-click (send! turtle-channel (t/->Forward -1))} "Backward"]
+   [:button {:on-click (send! turtle-channel (t/->Left))} "Left"]
+   [:button {:on-click (send! turtle-channel (t/->Right))} "Right"]
+   [:button {:on-click (send! turtle-channel (t/->Resize (/ 2)))} "Half"]
+   [:button {:on-click (send! turtle-channel (t/->Resize 2))} "Double"]])
+
+(defcard command-buttons
+  (reagent/as-element [turtle-command-buttons]))
