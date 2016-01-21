@@ -1,4 +1,4 @@
-(ns turtle-graphics.turtles.simple.core
+(ns turtle-graphics.turtles.simple.devcards
   "documentation and a view of a simple turtle"
   (:require
    [turtle-graphics.turtles.simple.turtle :as t]

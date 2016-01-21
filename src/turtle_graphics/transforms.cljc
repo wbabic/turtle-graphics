@@ -13,7 +13,7 @@
 (def lt-blue  (col/rgba 0 0 1 0.25))
 (def grey  (col/rgba 0.1 0.1 0.1))
 (def lt-grey  (col/rgba 0.1 0.1 0.1 0.25))
-(def lt-purple (col/rgba .8 0 0.8 0.25))
+(def lt-purple (col/rgba 0.8 0 0.8 0.25))
 (def clear    (col/rgba 0 0 0 0.0))
 
 (defn c->css [color]
@@ -61,8 +61,6 @@
 (def t-fn (transform-fn 200))
 
 (comment
-  (t/t-fn n/zero)
-  ;;=> [100 100]
-
-  (t/color-table :red))
-  ;;=> "#ff0000"
+  (require '[turtle-graphics.transforms])
+  (in-ns 'turtle-graphics.transforms)
+  )

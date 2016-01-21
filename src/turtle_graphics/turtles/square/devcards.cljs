@@ -1,12 +1,10 @@
-(ns turtle-graphics.turtles.square.turtle
+(ns turtle-graphics.turtles.square.devcards
   "square turtle implementation"
   (:require [devcards.core]
             [turtle-graphics.core :as cp :refer [Command]]
             [turtle-graphics.transforms :as t]
-            [turtle-graphics.turtles.square.state :as s]
-            [turtle-graphics.turtles.square.commands :as c]
-            [turtle-graphics.turtles.square.programs :as p]
-            [turtle-graphics.turtles.square.processor]
+            [turtle-graphics.turtles.square.svg.turtle :as turtle]
+            [turtle-graphics.turtles.square.svg.programs :as programs]
             [complex.number :as n]
             [cljs.core.match :refer-macros [match]]
             [reagent.core :as reagent]
@@ -17,7 +15,7 @@
 
 (enable-console-print!)
 
-(def app-state (reagent/atom s/initial-app-state))
+(def app-state (reagent/atom turtle/initial-app-state))
 
 (defn svg-command->string [command t-fn]
   (match command
@@ -156,40 +154,38 @@ and watch the turtle program run
 
 (go (loop []
       (let [command (<! turtle-channel)]
-        (println command)
-        (swap! app-state #(cp/process-command command %))
+        (swap! app-state #(turtle/process-command command %))
         (recur))))
 
 (defn run-program [turtle-program delay]
   (go
     (doseq [command turtle-program]
-      (println command)
       (<! (timeout delay))
       (>! turtle-channel command))))
 
 (comment
-  (in-ns 'turtle-graphics.turtles.square.turtle)
-  (p/circle-dance :lt-green :lt-blue :lt-red :lt-purple)
+  (in-ns 'turtle-graphics.turtles.square.devcards)
+  (programs/circle-dance :lt-green :lt-blue :lt-red :lt-purple)
   (keys @app-state)
   (c/->Forward 10)
-  (run-program (p/circle-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
-  (run-program (p/half-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
-  (run-program (p/quarter-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
-  (run-program (p/double-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
-  (run-program (p/quad-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
-  (run-program (p/root2-flower :lt-green :lt-blue :lt-red :lt-purple) 100)
-  (run-program (p/turtle-shell :lt-green :lt-blue :lt-red :lt-purple) 100)
+  (run-program (programs/circle-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
+  (run-program (programs/half-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
+  (run-program (programs/quarter-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
+  (run-program (programs/double-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
+  (run-program (programs/quad-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
+  (run-program (programs/root2-flower :lt-green :lt-blue :lt-red :lt-purple) 100)
+  (run-program (programs/turtle-shell :lt-green :lt-blue :lt-red :lt-purple) 100)
 
   (run-program
    (concat
-    (p/turtle-shell :lt-green :lt-blue :lt-red :lt-purple)
-    (p/double-dance :lt-green :lt-blue :lt-red :lt-purple)
-    (p/circle-dance :lt-green :lt-blue :lt-red :lt-purple)) 100)
+    (programs/turtle-shell :lt-green :lt-blue :lt-red :lt-purple)
+    (programs/double-dance :lt-green :lt-blue :lt-red :lt-purple)
+    (programs/circle-dance :lt-green :lt-blue :lt-red :lt-purple)) 100)
 
   (run-program
    (concat
-    (p/quad-dance :lt-green :lt-blue :lt-red :lt-purple)
-    (p/double-dance :lt-green :lt-blue :lt-red :lt-purple)
-    (p/circle-dance :lt-green :lt-blue :lt-red :lt-purple)
-    (p/half-dance :lt-green :lt-blue :lt-red :lt-purple)
-    (p/quarter-dance :lt-green :lt-blue :lt-red :lt-purple)) 10))
+    (programs/quad-dance :lt-green :lt-blue :lt-red :lt-purple)
+    (programs/double-dance :lt-green :lt-blue :lt-red :lt-purple)
+    (programs/circle-dance :lt-green :lt-blue :lt-red :lt-purple)
+    (programs/half-dance :lt-green :lt-blue :lt-red :lt-purple)
+    (programs/quarter-dance :lt-green :lt-blue :lt-red :lt-purple)) 10))

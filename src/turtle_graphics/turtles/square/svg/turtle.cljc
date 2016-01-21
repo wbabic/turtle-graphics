@@ -1,11 +1,36 @@
-(ns turtle-graphics.turtles.square.processor
-  (:require [turtle-graphics.core :refer [Command]]
-            [turtle-graphics.turtles.square.commands :as c]
-            [turtle-graphics.turtles.square.state :as s]
-            [complex.number :as n]))
+(ns turtle-graphics.turtles.square.svg.turtle
+  "an square turtle implementation in svg"
+  (:require [complex.number :as n]))
+
+(defprotocol Command
+  (process-command [command app-state]))
+
+(defrecord Square-turtle [position heading])
+
+(def initial-turtle (->Square-turtle n/zero n/one))
+
+(defn app-state-for-turtle
+  [turtle]
+  (let [position (:position turtle)]
+    {:turtle turtle
+     :svg {:path [[:M position]]
+           :circles []
+           :points []}}))
+
+(def initial-app-state
+  (app-state-for-turtle initial-turtle))
+
+;; define seven turtle commands
+(defrecord Forward [d])
+(defrecord Move [d])
+(defrecord Left [])
+(defrecord Right [])
+(defrecord Circle [color])
+(defrecord Point [color])
+(defrecord Resize [s])
 
 (extend-protocol Command
-  c/Forward
+  Forward
   (process-command [{d :d} app-state]
     (let [heading (get-in app-state [:turtle :heading])
           position (get-in app-state [:turtle :position])
@@ -14,7 +39,7 @@
       (-> app-state
           (update-in [:turtle :position] #(n/add % (n/mult heading d)))
           (update-in [:svg :path] #(conj % [:L w])))))
-  c/Move
+  Move
   (process-command [{d :d} app-state]
     (let [heading (get-in app-state [:turtle :heading])
           position (get-in app-state [:turtle :position])
@@ -23,35 +48,37 @@
       (-> app-state
           (update-in [:turtle :position] #(n/add % (n/mult heading d)))
           (update-in [:svg :path] #(conj % [:M w])))))
-  c/Left
+  Left
   (process-command [_ app-state]
     (update-in app-state [:turtle :heading] #(n/mult % n/i)))
-  c/Right
+  Right
   (process-command [_ app-state]
     (update-in app-state [:turtle :heading] #(n/mult % n/negative-i)))
-  c/Circle
+  Circle
   (process-command [{color :color} app-state]
     (let [p (get-in app-state [:turtle :position])
           h (get-in app-state [:turtle :heading])
           r (n/length h)
           circle {:stroke :grey :fill color :center p :radius r}]
       (update-in app-state [:svg :circles] #(conj % circle))))
-  c/Point
+  Point
   (process-command [{color :color} app-state]
     (let [p (get-in app-state [:turtle :position])
           h (get-in app-state [:turtle :heading])
           r (n/length h)
           circle {:stroke :grey :fill color :center p}]
       (update-in app-state [:svg :points] #(conj % circle))))
-  c/Resize
+  Resize
   (process-command [{s :s} app-state]
     (update-in app-state [:turtle :heading] #(n/mult % s))))
 
 (comment
-  (in-ns 'turtle-graphics.turtles.square.processor)
-  (c/->Forward 10)
+  (require '[turtle-graphics.turtles.square.svg.turtle :as t])
+  (in-ns 'turtle-graphics.turtles.square.svg.turtle)
+  (->Forward 10)
   ;;=> #turtle-graphics.turtles.square.commands.Forward{:d 10}
-  s/initial-turtle
+  initial-turtle
+  initial-app-state
 
-
+  (process-command (->Forward 10) initial-app-state)
   )

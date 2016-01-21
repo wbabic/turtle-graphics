@@ -1,10 +1,9 @@
 (ns turtle-graphics.devcards
   (:require
    [sablono.core :as sab :include-macros true]
-   [turtle-graphics.turtles.square.programs :as p]
-   [turtle-graphics.turtles.square.turtle]
-   [turtle-graphics.turtles.simple.core]
-   [turtle-graphics.turtles.simple.turtle]
+   [turtle-graphics.turtles.square.svg.programs :as p]
+   [turtle-graphics.turtles.square.devcards]
+   [turtle-graphics.turtles.simple.devcards]
    [devcards.core])
   (:require-macros
    [devcards.core :as dc :refer [defcard deftest defcard-doc]]))
