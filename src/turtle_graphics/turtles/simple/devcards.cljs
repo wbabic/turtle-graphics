@@ -97,7 +97,7 @@ Using devcards and reagent, consisting of
         v1 (v/scal-mul 10 (normalize v))
         [vx vy] v1
         vp1 [(- vy) vx]
-        vp2 [(- vy) (- vx)]
+        vp2 [vy (- vx)]
         av1 (minus vp1 v1)
         av2 (minus vp2 v1)]
     [(v/sum endpoint av1)
@@ -122,7 +122,7 @@ Using devcards and reagent, consisting of
 
 (defn send!
   "Send information from the user to the message queue.
-  The message must be a record which implements the Message protocol."
+  The message must be a record which implements the Processor protocol."
   [channel message]
   (fn [dom-event]
     (put! channel message)
@@ -139,3 +139,14 @@ Using devcards and reagent, consisting of
 
 (defcard command-buttons
   (reagent/as-element [turtle-command-buttons]))
+
+(defn timer-component []
+  (let [seconds-elapsed (reagent/atom 0)]
+    (fn []
+      (js/setTimeout #(swap! seconds-elapsed inc) 1000)
+      [:div
+       "Seconds Elapsed: " @seconds-elapsed])))
+
+(defcard-rg timer
+  "a timer component"
+  [timer-component])

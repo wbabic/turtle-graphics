@@ -16,8 +16,6 @@
 (def init-state
   {:turtle {:position [0 0] :heading {:angle 0 :length 1}}})
 
-(def app-state (atom init-state))
-
 (defn deg->rad [degrees]
   (/ (* degrees 2 Math/PI) 360))
 
