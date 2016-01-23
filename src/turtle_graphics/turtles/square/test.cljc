@@ -13,4 +13,6 @@
   (progams/two-step-circle :red :blue)
 
   turtle/initial-app-state
+
+  (turtle/process-command (turtle/->Forward 1) turtle/initial-app-state)
   )
