@@ -168,6 +168,7 @@ and watch the turtle program run
   (programs/circle-dance :lt-green :lt-blue :lt-red :lt-purple)
   (keys @app-state)
   (c/->Forward 10)
+
   (run-program (programs/circle-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
   (run-program (programs/half-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)
   (run-program (programs/quarter-dance :lt-green :lt-blue :lt-red :lt-purple) 1000)

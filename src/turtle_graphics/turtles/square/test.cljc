@@ -10,7 +10,7 @@
   ;;=> #turtle_graphics.turtles.square.commands.Forward{:d 1}
 
   programs/t-square
-  (progams/two-step-circle :red :blue)
+  (programs/two-step-circle :red :blue)
 
   turtle/initial-app-state
 

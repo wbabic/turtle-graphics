@@ -76,6 +76,11 @@
    [:m vector]
    [:circle style]
    [:path {:id path-name} path-data]
+
+   path-data: "d M x1 y1 L x2 y2 Z"
+
+   quadratic bezier curve P0 P1 P2
+   cubic bezire curve P0 P1 P2 P3
 ** turtle programs
    an initial turtle-state
    a sequence of turtle commands
