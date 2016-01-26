@@ -18,6 +18,10 @@
 * listening in on a turtle channel
 * waiting for turtle commands to process
 
+## Turtles
+* [A simple turtle](#!/turtle_graphics.turtles.simple.devcards)
+* [A square turtle](#!/turtle_graphics.turtles.square.devcards)
+
 ## Turtle state
 The state of the turtle consists of a position in the plane and a heading vector,
 like so:

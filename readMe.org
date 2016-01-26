@@ -1,4 +1,51 @@
 * turtle graphics
+** idea
+   reincarnate the spirit of the famous LOGO turtle
+   using the power of clojure and
+   the reach of javascript
+
+   this is not meant to reproduce the LOGO language,
+   but rather to use the idioms of clojure to
+   implement a turtle that can be used todo
+
+   explore mathematics, geometry in particulr,
+   computer programming,
+   using computer graphics
+
+   the approach is to build up turtles and components
+   in an interactive way
+   with immediate feedback
+
+   to this end, we make use of devcards and figwheel
+   and the reagent wrapper of react
+
+   download the git repository,
+   start up the figwheel repl,
+   open a borwser,
+   open an editor
+
+   then read the devcards,
+   read the code,
+   edit the code,
+   see the results in the browser - withou even refreshing it
+
+   the other idea at play here is that of
+   buiding a geometer's toolbox
+   for a working programmer/mathematician
+   exploring geometry
+   building tools along the way
+   as well as understanding
+   programmable turtles are tools to add to the toolbox
+   along with lines, circles, triangles and trasnformations
+   cross ratio and stereographic projections
+
+   this is about more than writing turtle programs,
+   is is about writing turtle program execution environments
+   creating turtle habitats in new places
+
+   we start with svg, canvas, quil, electron and then
+   move to native mobile devices
+
 ** usage
    start the app with:
    lein run -m clojure.main script/figwheel.clj
@@ -99,6 +146,12 @@
    collected in galleries
 
 ** turtle geometry
+   Hal Abelson
+   The Computer as a Medium for Exploring Mathematics
+   https://mitpress.mit.edu/books/turtle-geometry
+
+
+
 ** turtle habitats
 *** svg-turtle
     this turtle lives in an svg document that can either be a standalone file or
@@ -107,9 +160,15 @@
     this turtle lives in an html5 canvas
     both in two-dimensions and three, making use of web-gl
 
-*** processing-turtle
+*** quil-processing-turtle
+**** existing clojure quil turtles
+     https://github.com/google/clojure-turtle
+     A Clojure library that implements the Logo programming language in a Clojure context
+
+     https://github.com/santoshryadav/Clojure-Turtle-Program
+     A Quil sketch designed to draw Turtle and execute turtle commands in a Quil window.
 *** electron-turtle
-** famous turtles
+** a collection of turtles
 *** simple turtle
     responds only to commands
     Move, Turn, Resize

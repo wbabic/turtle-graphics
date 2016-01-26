@@ -25,7 +25,12 @@
     (put! channel message)
     (.stopPropagation dom-event)))
 
-(defn command-buttons [ui-channel]
+;; a designated turtle channel for this namespace
+(def ui-channel (chan))
+
+(defn command-buttons
+  ""
+  []
   (fn []
     [:div
      [:button {:on-click (send! ui-channel (turtle/->Forward 1))} "Forward"]

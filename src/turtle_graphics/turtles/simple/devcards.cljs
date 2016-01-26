@@ -13,7 +13,7 @@
 (enable-console-print!)
 
 (comment
-  (in-ns 'turtle-graphics.turtles.simple.core)
+  (in-ns 'turtle-graphics.turtles.simple.devcards)
   (t/process-command (t/->Forward 1) init-state)
   )
 
@@ -21,13 +21,31 @@
   "
 # A view of a simple turtle
 
-Using devcards and reagent, consisting of
+This namespace include
 
-* turtle state text view
-* turtle state rendered to svg
-* a turtle channel to put commands onto
-* gui components to put turtle commands onto a turtle channel
-* a turtle command processor that processes turtle commands from a turtle channel
+* an app state consisting of a position and a heading in svg coordinates,
+* views of the app state as data and svg,
+* a turtle channel,
+* command buttons that put turtle commands onto the turtle channel,
+* a command processor that listens for commands, applying each command it receives, in turn,
+to the current app state, transitioning to a new state.
+
+The turtle itself is just a simple turtle defined in the turtle-graphics.turtles.simple.turtle namespace, in a cljc file, and is accessible via clojure and clojurescript repls and test environments. It responds to six commands: Forward and Backward, Left and Right, Half and Double; three pairs of inverses.
+
+There are three interconnected devcards in this namespace, in addition to this one:
+
+* A view of app state as data: [render-turtle-data](#!/turtle_graphics.turtles.simple.devcards/render-turtle-data)
+* A view of app state as svg: [render-turtle-svg](#!/turtle_graphics.turtles.simple.devcards/render-turtle-svg)
+* [command buttons](#!/turtle_graphics.turtles.simple.devcards/command-buttons)
+
+This namespace also has a turtle channel and command processor:
+
+* a turtle channel: #'turtle-graphics.turtles.square.devcards/turtle-channel
+* a command processor function: #'turtle-graphics.turtles.simple.devcards/process-channel
+
+Clicking a command button will send a turtle command to the turtle channel.
+The command processor, upon receiving the command from the turtle channel, changes the app state.
+The app state is actually a reagent atom and so the views are updated whenever the it changes. Try it out. Click a command button and see the state change in both views. Then read the code.
 ")
 
 (def init-state
@@ -57,7 +75,7 @@ Using devcards and reagent, consisting of
      [:p (str "heading: " heading)]]))
 
 (defcard-rg render-turtle-data
-  "A reagent devcard to display turtle state as data."
+  "A reagent devcard to display turtle state as data using screen coordinates."
   [render-turtle-as-data app-state]
   app-state)
 
@@ -116,7 +134,7 @@ Using devcards and reagent, consisting of
       (svg-line endpoint at1) (svg-line endpoint at2)]]))
 
 (defcard-rg render-turtle-svg
-  "A reagent devcard to display turtle state as svg."
+  "A reagent devcard to display turtle state as a 400 by 400 svg element."
   [render-turtle-as-svg app-state]
   app-state)
 
