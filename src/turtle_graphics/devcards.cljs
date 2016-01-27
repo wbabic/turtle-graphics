@@ -11,12 +11,13 @@
 (defcard-doc
   "
 # Turtle Graphics
+Here, the famous MIT turtle is reincarnated in spirit using the power of clojure and the reach of javascript.
 
-* a simple turtle in an svg context
-* embedded in an html element
-* living in a web page
-* listening in on a turtle channel
-* waiting for turtle commands to process
+We have a collection of programmable turtles living in various habitats starting with a simple turtle living in an svg element and displayable within the browser. There is also a turtle that lives in a 2d canvas, and some day, in a 3d context.
+
+Each turtle has a state and a set of commands.
+Each command implements the process-command method of the Processor protocol.
+The process-command method takes a command and the state and returns a new transitioned state.
 
 ## Turtles
 * [A simple turtle](#!/turtle_graphics.turtles.simple.devcards)
@@ -29,7 +30,7 @@ like so:
 {:position [0 0] :heading {:length 1 :angle 0}}
 
 ## Turtle commands
-This turtle understands the following commands:
+The simple turtle understands the following commands:
 
 * move forward
 * turn left by 90 degrees
@@ -49,39 +50,25 @@ Each command implements the method
 
 of the Processor protocol.
 
+Other turtles may have additional commands.
+
 ## Turtle command processor
 The turtle state is transformed in some way by the turtle commands.
 The command processor listens for turtle commands placed on it's turtle channel.
 Upon receiving a command the atom is swaped for the new transformed state.
 
 ## Turtle programs
-a turtle program is a sequence of turtle commands,
-a sequnce of data
+A turtle program is a sequence of turtle commands,
+which can be created using clojure functions.
 
-which can be created using clojure functions
-
-### Square Turtle Programs
-"
-  (dc/mkdn-pprint-source p/t-square)
-  (dc/mkdn-pprint-source p/two-step-circle)
-  (dc/mkdn-pprint-source p/circle-dance)
-  (dc/mkdn-pprint-source p/half-dance)
-  (dc/mkdn-pprint-source p/root2-flower)
-
-  "
 ## Turtle program execution
-consists of sending turtle commands
-to a turtle channel
+Each turtle has a program execution environment which involves sending turtle commands
+to a turtle channel that has a listener that processes each command received
+by updating the app-state Reagent atom,
+triggering a re-render of the gui components.
 
-with a listener that processes each command
-
-by updating the app-state ratom
-
-each update triggers a re-render
-
-visit the 'turtle-graphics.turtles.square.turtle namespace
-
-for a live working example where programs can be run from a repl
+For a live working example where programs can be run from a repl
+visit the'turtle-graphics.turtles.square.turtle namespace.
 
 ")
 

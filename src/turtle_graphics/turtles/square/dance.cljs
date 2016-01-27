@@ -13,6 +13,9 @@
    [devcards.core :as dc :refer [defcard deftest defcard-rg defcard-doc]]
    [cljs.core.async.macros :refer [go]]))
 
+(comment
+  (in-ns 'turtle-graphics.turtles.square.dance)
+  )
 
 ;; an svg element with command buttons and program buttons
 ;; using an ui-channel to send turtle commands to the turtle processor
@@ -26,11 +29,11 @@
     (.stopPropagation dom-event)))
 
 ;; a designated turtle channel for this namespace
-(def ui-channel (chan))
+(def turtle-channel (chan))
 
-(defn command-buttons
+(defn command-buttons-comp
   ""
-  []
+  [ui-channel]
   (fn []
     [:div
      [:button {:on-click (send! ui-channel (turtle/->Forward 1))} "Forward"]
@@ -39,3 +42,7 @@
      [:button {:on-click (send! ui-channel (turtle/->Left))} "Right"]
      [:button {:on-click (send! ui-channel (turtle/->Resize (/ 2)))} "Half"]
      [:button {:on-click (send! ui-channel (turtle/->Resize 2))} "Double"]]))
+
+(comment
+  (command-buttons-comp turtle-channel)
+  )

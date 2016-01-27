@@ -146,6 +146,17 @@ and watch the turtle program run
   [render-turtle-component app-state]
   app-state)
 
+(defcard-doc
+  "### Square Turtle Programs"
+
+  (dc/mkdn-pprint-source programs/t-square)
+  (dc/mkdn-pprint-source programs/two-step-circle)
+  (dc/mkdn-pprint-source programs/circle-dance)
+  (dc/mkdn-pprint-source programs/half-dance)
+  (dc/mkdn-pprint-source programs/root2-flower)
+
+  )
+
 ;; a turtle program execution environment consists of
 ;; a turtle-channel
 ;; and a go loop that listens for commands and then processes them
