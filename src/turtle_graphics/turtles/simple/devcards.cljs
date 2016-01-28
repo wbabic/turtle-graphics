@@ -98,12 +98,6 @@ The app state is actually a reagent atom and so the views are updated whenever t
          [x2 y2] p2]
      [:line {:x1 x1 :x2 x2 :y1 y1 :y2 y2 :stroke stroke}])))
 
-(defn endpoint [turtle]
-  (let [[x y] (:position turtle)
-        {:keys [length angle]} (:heading turtle)]
-    [(+ x (* length (Math/cos (t/deg->rad angle))))
-     (+ y (* length (Math/sin (t/deg->rad angle))))]))
-
 (defn minus [v w]
   (v/sum v (v/scal-mul -1 w)))
 
@@ -124,7 +118,7 @@ The app state is actually a reagent atom and so the views are updated whenever t
 (defn render-turtle-as-svg [app-state]
   (let [app @app-state
         turtle (:turtle app)
-        endpoint (endpoint turtle)
+        endpoint (t/endpoint turtle)
         {:keys [position heading]} turtle
         [at1 at2] (arrow-tips position endpoint)]
     [:div

@@ -1,5 +1,5 @@
 (ns turtle-graphics.turtles.square.svg.turtle
-  "an square turtle implementation in svg"
+  "an square turtle implementation in svg using complex numbers"
   (:require [complex.number :as n]))
 
 (defprotocol Command
@@ -8,6 +8,10 @@
 (defrecord Square-turtle [position heading])
 
 (def initial-turtle (->Square-turtle n/zero n/one))
+
+(defn endpoint [turtle]
+  (let [{:keys [position heading]} turtle]
+    (n/add position heading)))
 
 (defn app-state-for-turtle
   [turtle]

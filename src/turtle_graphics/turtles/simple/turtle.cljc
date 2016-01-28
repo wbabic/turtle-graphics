@@ -24,6 +24,12 @@
     [(* length (Math/cos radians))
      (* length (Math/sin radians))]))
 
+(defn endpoint [turtle]
+  (let [[x y] (:position turtle)
+        {:keys [length angle]} (:heading turtle)]
+    [(+ x (* length (Math/cos (deg->rad angle))))
+     (+ y (* length (Math/sin (deg->rad angle))))]))
+
 (extend-protocol Processor
   Forward
   (process-command [{d :d} state]

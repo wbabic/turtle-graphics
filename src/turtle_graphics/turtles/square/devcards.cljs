@@ -86,76 +86,7 @@
      (into [:g {:className "circle-group"}] (map #(svg-circle % t-fn) circles))
      (into [:g {:className "point-group"}] (map #(svg-point % t-fn) points))]))
 
-(defn render-turtle-component [app-state]
-  (let [app @app-state
-        t (get-in app [:turtle])
-        h (:heading t)
-        pos (:position t)
-        p (get-in app [:svg :path])
-        circles (get-in app [:svg :circles])
-        points (get-in app [:svg :points])]
-    [:div
-     (render-svg app 200 t/t-fn)
-     [:p (str "position: " (n/coords pos))]
-     [:p (str "heading: " (n/coords h))]
-     [:p (str "svg-path: " (svg-path-text p))]
-     [:p (str "circles: "
-              (clojure.string/join " "
-                                   (map (comp str text-circle) circles)))]
-     [:p (str "points: "
-              (clojure.string/join " "
-                                   (map (comp str text-point) points)))]]))
 
-(defcard-rg render-turtle
-  "
-## A rendering of application state
-
-application state consists of
-
-* a turtle with position and heading
-* an svg path of lines and moves
-* circles and points
-
-there is
-
-* a turtle channel
-* a recurring go loop
-* a command processer
-
-a turtle command is put on the turtle channel
-the go loop picks up the command and sends it to the comand processor
-which updates the application state and
-causes a rerendering of the page
-
-use run-program, in this namespace,
-
-```clojure
-(run-program
-   (concat
-    (quad-dance :lt-green :lt-blue :lt-red :lt-purple)
-    (double-dance :lt-green :lt-blue :lt-red :lt-purple)
-    (circle-dance :lt-green :lt-blue :lt-red :lt-purple)
-    (half-dance :lt-green :lt-blue :lt-red :lt-purple)
-    (quarter-dance :lt-green :lt-blue :lt-red :lt-purple)) 100)
-```
-
-to send a sequence of commands to the turtle channel
-and watch the turtle program run
-
-"
-  [render-turtle-component app-state]
-  app-state)
-
-(defcard-doc
-  "### Square Turtle Programs"
-
-  (dc/mkdn-pprint-source programs/t-square)
-  (dc/mkdn-pprint-source programs/two-step-circle)
-  (dc/mkdn-pprint-source programs/circle-dance)
-  (dc/mkdn-pprint-source programs/half-dance)
-  (dc/mkdn-pprint-source programs/root2-flower)
-
-  )
 
 ;; a turtle program execution environment consists of
 ;; a turtle-channel
@@ -173,6 +104,64 @@ and watch the turtle program run
     (doseq [command turtle-program]
       (<! (timeout delay))
       (>! turtle-channel command))))
+
+(defn run-program! [prog delay]
+  (fn [] (run-program prog delay)))
+
+(defn moves
+  "square dance moves"
+  []
+  [:div
+   [:button {:on-click (run-program! programs/t-square 100)}
+    "Square"]
+   [:button {:on-click (run-program!
+                        (programs/two-step-circle :lt-blue :lt-purple)
+                        100)}
+    "Two Step"]
+   [:button {:on-click (run-program!
+                        (programs/turtle-shell :lt-green :lt-blue :lt-red :lt-purple)
+                        100)}
+    "Shell"]
+   [:button {:on-click (run-program!
+                        (programs/root2-flower :lt-green :lt-blue :lt-red :lt-purple)
+                        100)}
+    "Root 2 flower"]
+   [:button {:on-click #(reset! app-state turtle/initial-app-state)}
+    "Reset"]])
+
+(defn moves-gui []
+  [:div
+   (moves)])
+
+(defn render-turtle-component [app-state]
+  (let [app @app-state
+        t (get-in app [:turtle])
+        h (:heading t)
+        pos (:position t)
+        p (get-in app [:svg :path])
+        circles (get-in app [:svg :circles])
+        points (get-in app [:svg :points])]
+    [:div
+     [moves-gui]
+     (render-svg app 200 t/t-fn)
+     [:p (str "position: " (n/coords pos))]
+     [:p (str "heading: " (n/coords h))]
+     [:p (str "svg-path: " (svg-path-text p))]
+     [:p (str "circles: "
+              (clojure.string/join " "
+                                   (map (comp str text-circle) circles)))]
+     [:p (str "points: "
+              (clojure.string/join " "
+                                   (map (comp str text-point) points)))]]))
+
+(defcard-rg render-turtle
+  [render-turtle-component app-state]
+  app-state)
+
+(defcard-doc
+  "### Square Turtle Programs"
+  (dc/mkdn-pprint-source programs/t-square)
+  (dc/mkdn-pprint-source programs/two-step-circle))
 
 (comment
   (in-ns 'turtle-graphics.turtles.square.devcards)

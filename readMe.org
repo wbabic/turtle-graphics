@@ -142,6 +142,9 @@
    to where ever the turtle may be
    the turtle carries it's shell with it, as you know
    and it's own coordinate system
+** square dance
+   select from turtle programs
+   creating svg points lines circles paths groups
 ** turtle art
    collected in galleries
 
