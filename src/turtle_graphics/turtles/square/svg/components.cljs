@@ -2,6 +2,7 @@
   "reagent componets"
   (:require [turtle-graphics.core :as cp :refer [Command]]
             [turtle-graphics.transforms :as t]
+            [turtle-graphics.svg :as svg]
             [turtle-graphics.turtles.square.svg.turtle :as turtle]
             [turtle-graphics.turtles.square.svg.programs :as programs]
             [complex.number :as n]
@@ -58,3 +59,15 @@
                         100)}
     "Root 2 flower"]
    ])
+
+;; turtle -> svg
+;; using complex numbers and a transform function
+;; that transforms complex numbers in user space
+;; to screen coordinates
+(defn turtle->svg
+  "return svg for given turtle and t-fn"
+  [turtle t-fn]
+  (let [position (t-fn (:ppostition turtle))
+        endpoint (t-fn (turtle/endpoint turtle))
+        [at1 at2] (svg/arrow-tips position endpoint)]
+    (svg/turtle->svg position endpoint t-fn)))

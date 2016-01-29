@@ -60,6 +60,8 @@
 
 (def t-fn (transform-fn 200))
 
+(def t-fn-2 (transform-fn 400))
+
 (comment
   (require '[turtle-graphics.transforms])
   (in-ns 'turtle-graphics.transforms)

@@ -1,7 +1,9 @@
 (ns turtle-graphics.turtles.simple.devcards
   "documentation and a view of a simple turtle"
   (:require
-   [turtle-graphics.turtles.simple.turtle :as t]
+   [turtle-graphics.turtles.simple.turtle :as turtle]
+   [turtle-graphics.transforms :as t]
+   [turtle-graphics.svg :as svg]
    [devcards.core]
    [reagent.core :as reagent]
    [complex.vector :as v]
@@ -14,7 +16,7 @@
 
 (comment
   (in-ns 'turtle-graphics.turtles.simple.devcards)
-  (t/process-command (t/->Forward 1) init-state)
+  (turtle/process-command (turtle/->Forward 1) init-state)
   )
 
 (defcard-doc
@@ -60,7 +62,7 @@ The app state is actually a reagent atom and so the views are updated whenever t
 (defn process-channel [turtle-channel]
   (go (loop []
         (let [command (<! turtle-channel)]
-          (swap! app-state #(t/process-command command %))
+          (swap! app-state #(turtle/process-command command %))
           (recur)))))
 
 (process-channel turtle-channel)
@@ -79,53 +81,14 @@ The app state is actually a reagent atom and so the views are updated whenever t
   [render-turtle-as-data app-state]
   app-state)
 
-(def point-options {:stroke "grey" :fill "red"})
-
-(defn svg-point
-  ([p] (svg-point p point-options))
-  ([[x y] options]
-   (let [{:keys [stroke fill]} options]
-     [:circle {:stroke stroke
-               :fill fill
-               :cx x
-               :cy y
-               :r 3}])))
-
-(defn svg-line
-  ([p1 p2] (svg-line p1 p2 {:stroke "black"}))
-  ([p1 p2 {:keys [stroke]}]
-   (let [[x1 y1] p1
-         [x2 y2] p2]
-     [:line {:x1 x1 :x2 x2 :y1 y1 :y2 y2 :stroke stroke}])))
-
-(defn minus [v w]
-  (v/sum v (v/scal-mul -1 w)))
-
-(defn normalize [v]
-  (v/scal-mul (/ (v/len v)) v))
-
-(defn arrow-tips [position endpoint]
-  (let [v (minus endpoint position)
-        v1 (v/scal-mul 10 (normalize v))
-        [vx vy] v1
-        vp1 [(- vy) vx]
-        vp2 [vy (- vx)]
-        av1 (minus vp1 v1)
-        av2 (minus vp2 v1)]
-    [(v/sum endpoint av1)
-     (v/sum endpoint av2)]))
-
 (defn render-turtle-as-svg [app-state]
   (let [app @app-state
         turtle (:turtle app)
-        endpoint (t/endpoint turtle)
-        {:keys [position heading]} turtle
-        [at1 at2] (arrow-tips position endpoint)]
+        endpoint (turtle/endpoint turtle)
+        {:keys [position heading]} turtle]
     [:div
      [:svg {:width 400 :height 400}
-      (svg-point position)
-      (svg-line position endpoint)
-      (svg-line endpoint at1) (svg-line endpoint at2)]]))
+      (svg/turtle->svg position endpoint identity)]]))
 
 (defcard-rg render-turtle-svg
   "A reagent devcard to display turtle state as a 400 by 400 svg element."
@@ -142,12 +105,12 @@ The app state is actually a reagent atom and so the views are updated whenever t
 
 (defn turtle-command-buttons []
   [:div
-   [:button {:on-click (send! turtle-channel (t/->Forward 1))} "Forward"]
-   [:button {:on-click (send! turtle-channel (t/->Forward -1))} "Backward"]
-   [:button {:on-click (send! turtle-channel (t/->Right))} "Left"]
-   [:button {:on-click (send! turtle-channel (t/->Left))} "Right"]
-   [:button {:on-click (send! turtle-channel (t/->Resize (/ 2)))} "Half"]
-   [:button {:on-click (send! turtle-channel (t/->Resize 2))} "Double"]])
+   [:button {:on-click (send! turtle-channel (turtle/->Forward 1))} "Forward"]
+   [:button {:on-click (send! turtle-channel (turtle/->Forward -1))} "Backward"]
+   [:button {:on-click (send! turtle-channel (turtle/->Right))} "Left"]
+   [:button {:on-click (send! turtle-channel (turtle/->Left))} "Right"]
+   [:button {:on-click (send! turtle-channel (turtle/->Resize (/ 2)))} "Half"]
+   [:button {:on-click (send! turtle-channel (turtle/->Resize 2))} "Double"]])
 
 (defcard command-buttons
   (reagent/as-element [turtle-command-buttons]))
