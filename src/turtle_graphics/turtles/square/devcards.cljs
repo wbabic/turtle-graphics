@@ -30,18 +30,13 @@
 (defn render-svg
   "create svg component for svg-commands"
   [app resolution t-fn]
-  (let [svg-commands (get-in app [:svg :path])
-        circles (get-in app [:svg :circles])
-        points(get-in app [:svg :points])
-        path-string (svg/svg-path-string svg-commands t-fn)
-        turtle (:turtle app)
+  (let [turtle (:turtle app)
         position (:position turtle)
         endpoint (turtle/endpoint turtle)]
     [:svg {:width resolution :height resolution}
-     [:path {:d path-string
-             :stroke "black" :fill "white"}]
-     (into [:g {:className "circle-group"}] (map #(svg/svg-circle % t-fn) circles))
-     (into [:g {:className "point-group"}] (map #(svg/svg-point2 % t-fn) points))
+     (svg/svg-path app t-fn)
+     (svg/svg-circles app t-fn)
+     (svg/svg-points app t-fn)
      (svg/turtle->svg position endpoint t-fn)]))
 
 ;; a turtle program execution environment consists of

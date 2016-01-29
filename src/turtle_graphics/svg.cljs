@@ -99,3 +99,17 @@
               :cx cx
               :cy cy
               :r 3}]))
+
+(defn svg-circles [app t-fn]
+  (let [circles (get-in app [:svg :circles])]
+    (into [:g {:className "circle-group"}] (map #(svg-circle % t-fn) circles))))
+
+(defn svg-points [app t-fn]
+  (let [points(get-in app [:svg :points])]
+    (into [:g {:className "point-group"}] (map #(svg-point2 % t-fn) points))))
+
+(defn svg-path [app t-fn]
+  (let [svg-commands (get-in app [:svg :path])
+        path-string (svg-path-string svg-commands t-fn)]
+    [:path {:d path-string
+            :stroke "black" :fill "white"}]))
