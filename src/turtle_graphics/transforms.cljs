@@ -66,4 +66,7 @@
 (comment
   (require '[turtle-graphics.transforms])
   (in-ns 'turtle-graphics.transforms)
+
+  (t-fn n/zero)
+  (t-fn-2 n/zero)
   )

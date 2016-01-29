@@ -105,7 +105,7 @@
     (into [:g {:className "circle-group"}] (map #(svg-circle % t-fn) circles))))
 
 (defn svg-points [app t-fn]
-  (let [points(get-in app [:svg :points])]
+  (let [points (get-in app [:svg :points])]
     (into [:g {:className "point-group"}] (map #(svg-point2 % t-fn) points))))
 
 (defn svg-path [app t-fn]

@@ -51,12 +51,12 @@
         turtle (:turtle app)
         position (:position turtle)
         endpoint (turtle/endpoint turtle)
-        t-fn t/t-fn]
+        t-fn t/t-fn-2]
     [:div
      (c/command-buttons-comp turtle-chan)
      (c/moves turtle-chan)
      [reset-button]
-     [:svg {:width 800 :height 800}
+     [:svg {:width 400 :height 400}
       (svg/svg-path app t-fn)
       (svg/svg-circles app t-fn)
       (svg/svg-points app t-fn)
