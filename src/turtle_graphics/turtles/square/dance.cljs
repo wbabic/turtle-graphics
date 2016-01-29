@@ -38,6 +38,12 @@
           (swap! app-state #(turtle/process-command command %))
           (recur)))))
 
+(defn reset-button
+  []
+  [:div
+   [:button {:on-click #(reset! app-state turtle/initial-app-state)}
+    "Reset"]])
+
 (defn svg-component [app-state]
   (let [turtle-chan (chan)
         _ (process-channel turtle-chan)
@@ -49,7 +55,8 @@
     [:div
      (c/command-buttons-comp turtle-chan)
      (c/moves turtle-chan)
-     [:svg {:width 400 :height 400}
+     [reset-button]
+     [:svg {:width 800 :height 800}
       (svg/svg-path app t-fn)
       (svg/svg-circles app t-fn)
       (svg/svg-points app t-fn)
