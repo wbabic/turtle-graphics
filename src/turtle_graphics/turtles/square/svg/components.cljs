@@ -46,6 +46,8 @@
   [:div
    [:button {:on-click (run-program! ui-channel programs/t-square 100)}
     "Square"]
+   [:button {:on-click (run-program! ui-channel programs/four-square 100)}
+    "4 Square"]
    [:button {:on-click (run-program! ui-channel
                         (programs/two-step-circle :lt-blue :lt-purple)
                         100)}

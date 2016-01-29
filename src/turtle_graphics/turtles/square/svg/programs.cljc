@@ -5,6 +5,9 @@
 (def t-square
   (flatten (repeat 4 [(turtle/->Forward 1) (turtle/->Left)])))
 
+(def four-square
+  (flatten (repeat 4 (conj (vec t-square) (turtle/->Left)))))
+
 (defn two-step-circle [c1 c2]
   (list (turtle/->Forward 1)
         (turtle/->Circle c1)
