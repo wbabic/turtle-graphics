@@ -38,6 +38,7 @@
 
 (def config-1 (config-with-resolution 200))
 
+;; TODO make this work in both clojure and clojurescript
 (def round-pt (fn [p] (mapv Math.round p)))
 
 (defn user->screen

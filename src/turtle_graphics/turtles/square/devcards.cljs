@@ -5,6 +5,7 @@
             [turtle-graphics.transforms :as t]
             [turtle-graphics.turtles.square.svg.turtle :as turtle]
             [turtle-graphics.turtles.square.svg.components :as c]
+            [turtle-graphics.svg :as svg]
             [turtle-graphics.turtles.square.svg.programs :as programs]
             [complex.number :as n]
             [cljs.core.match :refer-macros [match]]
@@ -17,54 +18,6 @@
 (enable-console-print!)
 
 (def app-state (reagent/atom turtle/initial-app-state))
-
-(defn svg-command->string [command t-fn]
-  (match command
-         [:M p]
-         (let [[px py] (t-fn p)]
-           (str "M " px " " py " "))
-         [:L p]
-         (let [[px py] (t-fn p)]
-           (str "L " px " " py " "))
-         :else nil))
-
-(defn svg-command->text [command]
-  (match command
-         [:M p]
-         (let [[px py] (n/coords p)]
-           (str "M " px " " py " "))
-         [:L p]
-         (let [[px py] (n/coords p)]
-           (str "L " px " " py " "))
-         :else nil))
-
-(defn svg-path-string [svg-commands t-fn]
-  (clojure.string/trim
-   (clojure.string/join
-    (map #(svg-command->string % t-fn) svg-commands))))
-
-(defn svg-path-text [svg-commands]
-  (clojure.string/trim
-   (clojure.string/join
-    (map svg-command->text svg-commands))))
-
-(defn svg-circle [circle t-fn]
-  (let [{:keys [stroke fill center radius]} circle
-        [cx cy] (t-fn center)]
-    [:circle {:stroke (t/color-table stroke)
-              :fill (t/color-table fill)
-              :cx cx
-              :cy cy
-              :r (t-fn radius)}]))
-
-(defn svg-point [circle t-fn]
-  (let [{:keys [stroke fill center radius]} circle
-        [cx cy] (t-fn center)]
-    [:circle {:stroke (t/color-table stroke)
-              :fill (t/color-table fill)
-              :cx cx
-              :cy cy
-              :r 3}]))
 
 (defn text-circle [circle t-fn]
   (let [{:keys [stroke fill center radius]} circle]
@@ -80,14 +33,16 @@
   (let [svg-commands (get-in app [:svg :path])
         circles (get-in app [:svg :circles])
         points(get-in app [:svg :points])
-        path-string (svg-path-string svg-commands t-fn)]
+        path-string (svg/svg-path-string svg-commands t-fn)
+        turtle (:turtle app)
+        position (:position turtle)
+        endpoint (turtle/endpoint turtle)]
     [:svg {:width resolution :height resolution}
      [:path {:d path-string
              :stroke "black" :fill "white"}]
-     (into [:g {:className "circle-group"}] (map #(svg-circle % t-fn) circles))
-     (into [:g {:className "point-group"}] (map #(svg-point % t-fn) points))]))
-
-
+     (into [:g {:className "circle-group"}] (map #(svg/svg-circle % t-fn) circles))
+     (into [:g {:className "point-group"}] (map #(svg/svg-point2 % t-fn) points))
+     (svg/turtle->svg position endpoint t-fn)]))
 
 ;; a turtle program execution environment consists of
 ;; a turtle-channel
@@ -125,7 +80,7 @@
      (render-svg app 200 t/t-fn)
      [:p (str "position: " (n/coords pos))]
      [:p (str "heading: " (n/coords h))]
-     [:p (str "svg-path: " (svg-path-text p))]
+     [:p (str "svg-path: " (svg/svg-path-text p))]
      [:p (str "circles: "
               (clojure.string/join " "
                                    (map (comp str text-circle) circles)))]
