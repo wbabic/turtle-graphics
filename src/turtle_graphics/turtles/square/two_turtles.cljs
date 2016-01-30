@@ -19,9 +19,23 @@
   (in-ns 'turtle-graphics.turtles.square.two-turtles)
   )
 
+(defn reduce-turtle [turtle & commands]
+  (reduce (fn [t c] (turtle/process-command c t))
+          turtle
+          commands))
+
 (def t0 turtle/init-state)
-(def t1 (turtle/process-command (turtle/->Forward -2) t0))
-(def t2 (turtle/process-command (turtle/->Forward 2) t0))
+(def t1 (reduce-turtle t0
+                       (turtle/->Forward -2)
+                       (turtle/->Right)
+                       (turtle/->Forward -2)
+                       (turtle/->Resize (/ 2))))
+(def t2 (reduce-turtle t0
+                       (turtle/->Forward -2)
+                       (turtle/->Right)
+                       (turtle/->Forward 2)
+                       (turtle/->Left)
+                       (turtle/->Resize (/ 2))))
 
 (def app-state (reagent/atom
                 {:t1 t1
@@ -63,6 +77,17 @@
    [:button {:on-click #(add-line)}
     "Line from t1 to t2"]])
 
+(defn command-buttons-comp
+  "gui with command buttons"
+  [ui-channel]
+  [:div
+   [:button {:on-click (c/send! ui-channel (turtle/->Forward 1))} "Forward"]
+   [:button {:on-click (c/send! ui-channel (turtle/->Forward -1))} "Backward"]
+   [:button {:on-click (c/send! ui-channel (turtle/->Left))} "Left"]
+   [:button {:on-click (c/send! ui-channel (turtle/->Right))} "Right"]
+   [:button {:on-click (c/send! ui-channel (turtle/->Resize (/ 2)))} "Half"]
+   [:button {:on-click (c/send! ui-channel (turtle/->Resize 2))} "Double"]])
+
 (defn svg-component [app-state]
   (let [t-chan-1 (chan)
         t-chan-2 (chan)
@@ -75,10 +100,10 @@
     [:div
      [:div
       [:p "turtle-1"]
-      (c/command-buttons-comp t-chan-1)]
+      (command-buttons-comp t-chan-1)]
      [:div
       [:p "turtle-2"]
-      (c/command-buttons-comp t-chan-2)]
+      (command-buttons-comp t-chan-2)]
      [line-button]
      [:svg {:width 400 :height 400}
       (svg/svg-lines app t-fn)
