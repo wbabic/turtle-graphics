@@ -3,7 +3,7 @@
   (:require [devcards.core]
             [turtle-graphics.core :as cp :refer [Command]]
             [turtle-graphics.transforms :as t]
-            [turtle-graphics.turtles.square.svg.turtle :as turtle]
+            [turtle-graphics.turtles.square.turtle :as turtle]
             [turtle-graphics.turtles.square.svg.components :as c]
             [turtle-graphics.svg :as svg]
             [turtle-graphics.turtles.square.svg.programs :as programs]
@@ -19,9 +19,13 @@
   (in-ns 'turtle-graphics.turtles.square.two-turtles)
   )
 
+(def t0 turtle/init-state)
+(def t1 (turtle/process-command (turtle/->Forward -2) t0))
+(def t2 (turtle/process-command (turtle/->Forward 2) t0))
+
 (def app-state (reagent/atom
-                {:t1 turtle/initial-app-state
-                 :t2 turtle/initial-app-state
+                {:t1 t1
+                 :t2 t2
                  :lines []}))
 
 (comment
