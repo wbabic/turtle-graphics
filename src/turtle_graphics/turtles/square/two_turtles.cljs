@@ -71,13 +71,20 @@
         l (line t1 t2)]
     (swap! app-state #(update-in % [:lines] (fn [s] (conj s l))))))
 
-(defn line-button [c1 c2]
+
+(defn move-both [c1 c2]
   (let [m (turtle/->Forward 1)]
     [:div
      [:button {:on-click #(do
-                            (add-line)
                             (put! c1 m)
                             (put! c2 m))}
+      "move both"]]))
+
+(defn line-button []
+  (let [m (turtle/->Forward 1)]
+    [:div
+     [:button {:on-click #(do
+                            (add-line))}
       "Line from t1 to t2"]]))
 
 (defn command-buttons-comp
@@ -107,7 +114,8 @@
      [:div
       [:p "turtle-2"]
       (command-buttons-comp t-chan-2)]
-     (line-button t-chan-1 t-chan-2)
+     [line-button]
+     (move-both t-chan-1 t-chan-2)
      [:svg {:width 400 :height 400}
       (svg/svg-lines app t-fn)
       (turtle->svg (:turtle app-1) t-fn)
