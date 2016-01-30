@@ -100,6 +100,14 @@
               :cy cy
               :r 3}]))
 
+(defn svg-line2 [line t-fn]
+  (let [{:keys [p1 p2]} line
+        [x1 y1] (t-fn p1)
+        [x2 y2] (t-fn p2)]
+    [:line {:stroke "pink"
+            :x1 x1 :y1 y1
+            :x2 x2 :y2 y2}]))
+
 (defn svg-circles [app t-fn]
   (let [circles (get-in app [:svg :circles])]
     (into [:g {:className "circle-group"}] (map #(svg-circle % t-fn) circles))))
@@ -107,6 +115,10 @@
 (defn svg-points [app t-fn]
   (let [points (get-in app [:svg :points])]
     (into [:g {:className "point-group"}] (map #(svg-point2 % t-fn) points))))
+
+(defn svg-lines [app t-fn]
+  (let [lines (get-in app [:lines])]
+    (into [:g {:className "line-group"}] (map #(svg-line2 % t-fn) lines))))
 
 (defn svg-path [app t-fn]
   (let [svg-commands (get-in app [:svg :path])

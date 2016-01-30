@@ -4,6 +4,7 @@
    [turtle-graphics.turtles.square.svg.programs :as p]
    [turtle-graphics.turtles.square.devcards]
    [turtle-graphics.turtles.square.dance]
+   [turtle-graphics.turtles.square.two-turtles]
    [turtle-graphics.turtles.simple.devcards]
    [devcards.core])
   (:require-macros
