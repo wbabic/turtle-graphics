@@ -71,22 +71,25 @@
         l (line t1 t2)]
     (swap! app-state #(update-in % [:lines] (fn [s] (conj s l))))))
 
-(defn line-button
-  []
-  [:div
-   [:button {:on-click #(add-line)}
-    "Line from t1 to t2"]])
+(defn line-button [c1 c2]
+  (let [m (turtle/->Forward 1)]
+    [:div
+     [:button {:on-click #(do
+                            (add-line)
+                            (put! c1 m)
+                            (put! c2 m))}
+      "Line from t1 to t2"]]))
 
 (defn command-buttons-comp
   "gui with command buttons"
   [ui-channel]
   [:div
-   [:button {:on-click (c/send! ui-channel (turtle/->Forward 1))} "Forward"]
-   [:button {:on-click (c/send! ui-channel (turtle/->Forward -1))} "Backward"]
-   [:button {:on-click (c/send! ui-channel (turtle/->Left))} "Left"]
-   [:button {:on-click (c/send! ui-channel (turtle/->Right))} "Right"]
+   [:button {:on-click (c/send! ui-channel (turtle/->Forward 1))}    "Forward"]
+   [:button {:on-click (c/send! ui-channel (turtle/->Forward -1))}   "Backward"]
+   [:button {:on-click (c/send! ui-channel (turtle/->Left))}         "Left"]
+   [:button {:on-click (c/send! ui-channel (turtle/->Right))}        "Right"]
    [:button {:on-click (c/send! ui-channel (turtle/->Resize (/ 2)))} "Half"]
-   [:button {:on-click (c/send! ui-channel (turtle/->Resize 2))} "Double"]])
+   [:button {:on-click (c/send! ui-channel (turtle/->Resize 2))}     "Double"]])
 
 (defn svg-component [app-state]
   (let [t-chan-1 (chan)
@@ -104,7 +107,7 @@
      [:div
       [:p "turtle-2"]
       (command-buttons-comp t-chan-2)]
-     [line-button]
+     (line-button t-chan-1 t-chan-2)
      [:svg {:width 400 :height 400}
       (svg/svg-lines app t-fn)
       (turtle->svg (:turtle app-1) t-fn)
