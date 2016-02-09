@@ -153,8 +153,6 @@
    The Computer as a Medium for Exploring Mathematics
    https://mitpress.mit.edu/books/turtle-geometry
 
-
-
 ** turtle habitats
 *** svg-turtle
     this turtle lives in an svg document that can either be a standalone file or
@@ -165,11 +163,19 @@
 
 *** quil-processing-turtle
 **** existing clojure quil turtles
-     https://github.com/google/clojure-turtle
-     A Clojure library that implements the Logo programming language in a Clojure context
+***** google
+      https://github.com/google/clojure-turtle
+      A Clojure library that implements the Logo programming language in a Clojure context
 
+***** quil sketch
      https://github.com/santoshryadav/Clojure-Turtle-Program
      A Quil sketch designed to draw Turtle and execute turtle commands in a Quil window.
+***** clojure bridge
+      a dialect of google clojure turtle
+      https://github.com/ClojureBridge/welcometoclojurebridge/blob/master/outline/TURTLE-SAMPLES.md
+      rivendell:~/dev/clojure
+      git clone https://github.com/ClojureBridge/welcometoclojurebridge
+
 *** electron-turtle
 ** a collection of turtles
 *** simple turtle

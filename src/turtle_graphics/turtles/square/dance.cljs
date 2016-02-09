@@ -34,7 +34,6 @@
 (defn process-channel [turtle-channel]
   (go (loop []
         (let [command (<! turtle-channel)]
-          (println command)
           (swap! app-state #(turtle/process-command command %))
           (recur)))))
 
