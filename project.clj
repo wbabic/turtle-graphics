@@ -1,6 +1,6 @@
 (defproject turtle-graphics "0.1.1"
   :description "Turtle Graphics in clojurescript"
-  :url "http://wbabic.github.io"
+  :url "http://wbabic.github.io/turtle-graphics"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
@@ -35,20 +35,27 @@
 
   :plugins [[lein-cljsbuild "1.1.2"]]
 
-  :clean-targets ^{:protect false} ["resources/public/cards" "target"]
+  :clean-targets ^{:protect false} ["resources/public/js/cards"
+                                    "resources/public/js/pages"
+                                    "target"]
 
   :figwheel {:build-ids ["cards"]
              :css-dirs ["resources/public/css"]}
 
   :cljsbuild {
               :builds
-              [
-               {:id           "cards"
+              [{:id           "cards"
                 :figwheel     {:devcards true}
                 :source-paths ["src"]
                 :compiler     {:main       turtle-graphics.devcards
                                :source-map-timestamp true
                                :asset-path "cards"
-                               :output-to  "resources/public/cards/main.js"
-                               :output-dir "resources/public/cards"}}
-               ]})
+                               :output-to  "resources/public/js/cards/main.js"
+                               :output-dir "resources/public/js/cards"}}
+               {:id "pages"
+                :source-paths ["src" "pages-src"]
+                :compiler {:main       "pages.core"
+                           :devcards true
+                           :asset-path "js/pages/out"
+                           :output-to  "resources/public/js/pages/devcards.js"
+                           :optimizations :advanced}}]})
