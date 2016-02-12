@@ -3,3 +3,4 @@
 /target/
 /.lein-repl-history
 **/.DS_Store
+/resources/public/js/cards/
